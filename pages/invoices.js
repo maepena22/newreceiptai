@@ -156,6 +156,10 @@ export default function InvoicesPage() {
           <HeaderCell>Date</HeaderCell>
           <Cell dataKey="date" />
         </Column>
+        <Column width={120} resizable>
+          <HeaderCell>Uploader</HeaderCell>
+          <Cell dataKey="uploader_name" />
+        </Column>
         <Column width={240} flexGrow={1}>
           <HeaderCell>OCR Text</HeaderCell>
           <Cell>
