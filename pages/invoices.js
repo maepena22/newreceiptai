@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
-import { Table, Checkbox, Button, Stack, Message, toaster, Panel } from 'rsuite';
+import { Table, Checkbox, Button, Stack, Message, toaster, Panel, Input, InputGroup, SelectPicker } from 'rsuite';
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -8,6 +8,10 @@ export default function InvoicesPage() {
   const [invoices, setInvoices] = useState([]);
   const [selected, setSelected] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchText, setSearchText] = useState('');
+  const [filteredInvoices, setFilteredInvoices] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [uniqueUsers, setUniqueUsers] = useState([]);
 
   useEffect(() => {
     fetch('/api/invoices')
@@ -23,9 +27,28 @@ export default function InvoicesPage() {
           }
         });
         setInvoices(data);
+        setFilteredInvoices(data);
+        // Extract unique users
+        const users = [...new Set(data.map(invoice => invoice.uploader_name))];
+        setUniqueUsers(users.map(user => ({ label: user, value: user })));
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    const filtered = invoices.filter(invoice => {
+      const matchesSearch = 
+        invoice.company_name?.toLowerCase().includes(searchText.toLowerCase()) ||
+        invoice.price?.toString().includes(searchText) ||
+        invoice.date?.toLowerCase().includes(searchText) ||
+        invoice.raw_ocr?.toLowerCase().includes(searchText);
+      
+      const matchesUser = !selectedUser || invoice.uploader_name === selectedUser;
+      
+      return matchesSearch && matchesUser;
+    });
+    setFilteredInvoices(filtered);
+  }, [searchText, invoices, selectedUser]);
 
   const handleSelect = (id) => {
     setSelected(prev =>
@@ -42,7 +65,7 @@ export default function InvoicesPage() {
   };
 
   const exportToExcel = () => {
-    const exportData = invoices.filter(inv => selected.includes(inv.id));
+    const exportData = filteredInvoices.filter(inv => selected.includes(inv.id));
     if (exportData.length === 0) {
       toaster.push(<Message type="warning">No receipt selected.</Message>);
       return;
@@ -58,17 +81,37 @@ export default function InvoicesPage() {
     <Panel bordered shaded style={{ maxWidth: 1200, margin: '40px auto', background: '#fff' }}>
       <Stack spacing={16} alignItems="center" justifyContent="space-between" style={{ marginBottom: 24 }}>
         <h2 style={{ fontWeight: 700, fontSize: 28, color: '#1675e0', margin: 0 }}>Receipt</h2>
-        <Button
-          appearance="primary"
-          color="green"
-          disabled={selected.length === 0}
-          onClick={exportToExcel}
-        >
-          Export Selected to Excel
-        </Button>
+        <Stack spacing={16}>
+          <Stack spacing={8} direction="column" alignItems="flex-start">
+            <SelectPicker
+              data={uniqueUsers}
+              placeholder="Filter by user"
+              value={selectedUser}
+              onChange={setSelectedUser}
+              style={{ width: 250 }}
+              cleanable
+            />
+            <InputGroup>
+              <Input 
+                placeholder="Search receipts..."
+                value={searchText}
+                onChange={setSearchText}
+                style={{ width: 250 }}
+              />
+            </InputGroup>
+          </Stack>
+          <Button
+            appearance="primary"
+            color="green"
+            disabled={selected.length === 0}
+            onClick={exportToExcel}
+          >
+            Export Selected to Excel
+          </Button>
+        </Stack>
       </Stack>
       <Table
-        data={invoices}
+        data={filteredInvoices}
         autoHeight
         bordered
         cellBordered
@@ -129,7 +172,7 @@ export default function InvoicesPage() {
           <Cell dataKey="created_at" />
         </Column>
       </Table>
-      {invoices.length === 0 && !loading && (
+      {filteredInvoices.length === 0 && !loading && (
         <Message type="info" style={{ marginTop: 24 }}>No invoices found.</Message>
       )}
     </Panel>
