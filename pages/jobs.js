@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Progress } from 'rsuite';
 
 function statusColor(status) {
@@ -15,13 +15,26 @@ export default function JobsPage() {
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState({});
   const [allExpanded, setAllExpanded] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [showJobModal, setShowJobModal] = useState(false);
+  const scrollContainerRef = useRef(null);
+  const savedScrollPosition = useRef(0);
 
   const fetchJobs = async () => {
+    // Save current scroll position
+    if (scrollContainerRef.current) {
+      savedScrollPosition.current = scrollContainerRef.current.scrollTop;
+    }
+    
     setLoading(true);
     const res = await fetch('/api/jobs');
     const data = await res.json();
-    setJobs(data);
     setLoading(false);
+    
+    // Only update if data is different
+    if (JSON.stringify(jobs) !== JSON.stringify(data)) {
+      setJobs(data);
+    }
   };
 
   useEffect(() => {
@@ -29,6 +42,13 @@ export default function JobsPage() {
     const interval = setInterval(fetchJobs, 3000); // Poll every 3s
     return () => clearInterval(interval);
   }, []);
+
+  // Restore scroll position after jobs update
+  useEffect(() => {
+    if (scrollContainerRef.current && savedScrollPosition.current > 0) {
+      scrollContainerRef.current.scrollTop = savedScrollPosition.current;
+    }
+  }, [jobs]);
 
   // Group jobs by batch_id
   const batches = {};
@@ -52,6 +72,29 @@ export default function JobsPage() {
     setAllExpanded(false);
   };
 
+  const handleJobClick = async (jobId) => {
+    try {
+      const res = await fetch(`/api/jobs?id=${jobId}`);
+      const job = await res.json();
+      setSelectedJob(job);
+      setShowJobModal(true);
+    } catch (error) {
+      console.error('Error fetching job details:', error);
+    }
+  };
+
+  const formatError = (error) => {
+    if (!error) return '';
+    
+    // Split error into lines for better display
+    const lines = error.split('\n');
+    return lines.map((line, index) => (
+      <div key={index} className="font-mono text-xs">
+        {line}
+      </div>
+    ));
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-8">
       <div className="flex items-center justify-between mb-8">
@@ -66,7 +109,11 @@ export default function JobsPage() {
       ) : Object.keys(batches).length === 0 ? (
         <div className="text-lg text-gray-500">No jobs found.</div>
       ) : (
-        <div className="space-y-8">
+        <div 
+          className="space-y-8 overflow-y-auto" 
+          ref={scrollContainerRef}
+          style={{ maxHeight: 'calc(100vh - 200px)' }}
+        >
           {Object.entries(batches).map(([batchId, jobs]) => {
             const batchProgress = Math.round(jobs.reduce((acc, j) => acc + (j.progress || 0), 0) / jobs.length);
             const batchStatus = jobs.every(j => j.status === 'done')
@@ -104,6 +151,7 @@ export default function JobsPage() {
                           <th className="px-4 py-3 text-left font-semibold text-gray-600 border-b border-gray-100">Uploader</th>
                           <th className="px-4 py-3 text-left font-semibold text-gray-600 border-b border-gray-100">Status</th>
                           <th className="px-4 py-3 text-left font-semibold text-gray-600 border-b border-gray-100">Progress</th>
+                          <th className="px-4 py-3 text-left font-semibold text-gray-600 border-b border-gray-100">Error</th>
                           <th className="px-4 py-3 text-left font-semibold text-gray-600 border-b border-gray-100">Created</th>
                           <th className="px-4 py-3 text-left font-semibold text-gray-600 border-b border-gray-100">Updated</th>
                         </tr>
@@ -111,7 +159,14 @@ export default function JobsPage() {
                       <tbody>
                         {jobs.map(job => (
                           <tr key={job.id} className="bg-gray-50 hover:bg-red-50 transition rounded-xl shadow-sm">
-                            <td className="px-4 py-3 font-mono border-b border-gray-100">{job.id}</td>
+                            <td className="px-4 py-3 font-mono border-b border-gray-100">
+                              <button 
+                                onClick={() => handleJobClick(job.id)}
+                                className="text-blue-600 hover:text-blue-800 underline"
+                              >
+                                {job.id}
+                              </button>
+                            </td>
                             <td className="px-4 py-3 border-b border-gray-100">{job.uploader_name}</td>
                             <td className="px-4 py-3 border-b border-gray-100">
                               <span className={`px-2 py-1 rounded text-xs font-semibold ${statusColor(job.status)}`}>{job.status.toUpperCase()}</span>
@@ -119,6 +174,18 @@ export default function JobsPage() {
                             <td className="px-4 py-3 border-b border-gray-100">
                               <Progress percent={job.progress} showInfo={false} strokeColor="#ef4444" />
                               <span className="ml-2 text-xs text-gray-500">{job.progress}%</span>
+                            </td>
+                            <td className="px-4 py-3 border-b border-gray-100">
+                              {job.error ? (
+                                <div className="max-w-xs">
+                                  <div className="text-red-600 text-xs font-semibold">Error:</div>
+                                  <div className="text-xs text-gray-700 truncate" title={job.error}>
+                                    {job.error.split('\n')[0]}
+                                  </div>
+                                </div>
+                              ) : (
+                                <span className="text-gray-400 text-xs">-</span>
+                              )}
                             </td>
                             <td className="px-4 py-3 border-b border-gray-100">{job.created_at}</td>
                             <td className="px-4 py-3 border-b border-gray-100">{job.updated_at}</td>
@@ -131,6 +198,59 @@ export default function JobsPage() {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Job Details Modal */}
+      {showJobModal && selectedJob && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-8 max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">Job Details - #{selectedJob.id}</h2>
+              <button 
+                onClick={() => setShowJobModal(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-6 mb-6">
+              <div>
+                <h3 className="font-semibold text-gray-700 mb-2">Basic Information</h3>
+                <div className="space-y-2 text-sm">
+                  <div><strong>Uploader:</strong> {selectedJob.uploader_name}</div>
+                  <div><strong>Status:</strong> 
+                    <span className={`ml-2 px-2 py-1 rounded text-xs font-semibold ${statusColor(selectedJob.status)}`}>
+                      {selectedJob.status.toUpperCase()}
+                    </span>
+                  </div>
+                  <div><strong>Progress:</strong> {selectedJob.progress}%</div>
+                  <div><strong>File Path:</strong> <code className="text-xs bg-gray-100 px-1 rounded">{selectedJob.file_path}</code></div>
+                  <div><strong>Created:</strong> {selectedJob.created_at}</div>
+                  <div><strong>Updated:</strong> {selectedJob.updated_at}</div>
+                </div>
+              </div>
+              
+              <div>
+                <h3 className="font-semibold text-gray-700 mb-2">Results</h3>
+                {selectedJob.result && (
+                  <div className="bg-gray-50 p-3 rounded text-xs font-mono overflow-x-auto">
+                    <pre>{selectedJob.result}</pre>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {selectedJob.error && (
+              <div>
+                <h3 className="font-semibold text-red-700 mb-2">Error Details</h3>
+                <div className="bg-red-50 border border-red-200 p-4 rounded text-sm">
+                  {formatError(selectedJob.error)}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
