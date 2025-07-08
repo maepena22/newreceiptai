@@ -17,7 +17,6 @@ export default function InvoicesPage() {
     fetch('/api/invoices')
       .then(res => res.json())
       .then(data => {
-        // Debug: check for <a> in any field
         data.forEach(row => {
           if (
             (row.company_name && row.company_name.includes('<a')) ||
@@ -28,7 +27,6 @@ export default function InvoicesPage() {
         });
         setInvoices(data);
         setFilteredInvoices(data);
-        // Extract unique users
         const users = [...new Set(data.map(invoice => invoice.uploader_name))];
         setUniqueUsers(users.map(user => ({ label: user, value: user })));
         setLoading(false);
@@ -42,9 +40,7 @@ export default function InvoicesPage() {
         invoice.price?.toString().includes(searchText) ||
         invoice.date?.toLowerCase().includes(searchText) ||
         invoice.raw_ocr?.toLowerCase().includes(searchText);
-      
       const matchesUser = !selectedUser || invoice.uploader_name === selectedUser;
-      
       return matchesSearch && matchesUser;
     });
     setFilteredInvoices(filtered);
@@ -78,107 +74,115 @@ export default function InvoicesPage() {
   };
 
   return (
-    <Panel bordered shaded style={{ maxWidth: 1200, margin: '40px auto', background: '#fff' }}>
-      <Stack spacing={16} alignItems="center" justifyContent="space-between" style={{ marginBottom: 24 }}>
-        <h2 style={{ fontWeight: 700, fontSize: 28, color: '#1675e0', margin: 0 }}>Receipt</h2>
-        <Stack spacing={16}>
-          <Stack spacing={8} direction="column" alignItems="flex-start">
-            <SelectPicker
-              data={uniqueUsers}
-              placeholder="Filter by user"
-              value={selectedUser}
-              onChange={setSelectedUser}
-              style={{ width: 250 }}
-              cleanable
-            />
-            <InputGroup>
-              <Input 
-                placeholder="Search receipts..."
-                value={searchText}
-                onChange={setSearchText}
-                style={{ width: 250 }}
-              />
-            </InputGroup>
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 py-12">
+      <div className="max-w-6xl mx-auto animate-fade-in-up">
+        <div className="bg-white shadow-2xl rounded-3xl p-10 border border-gray-100">
+          <Stack spacing={16} alignItems="center" justifyContent="space-between" style={{ marginBottom: 32 }}>
+            <h2 className="font-extrabold text-3xl text-red-700 m-0">Receipts Table</h2>
+            <Stack spacing={16}>
+              <Stack spacing={8} direction="column" alignItems="flex-start">
+                <SelectPicker
+                  data={uniqueUsers}
+                  placeholder="Filter by user"
+                  value={selectedUser}
+                  onChange={setSelectedUser}
+                  style={{ width: 250 }}
+                  cleanable
+                />
+                <InputGroup>
+                  <Input 
+                    placeholder="Search receipts..."
+                    value={searchText}
+                    onChange={setSearchText}
+                    style={{ width: 250 }}
+                  />
+                </InputGroup>
+              </Stack>
+              <Button
+                appearance="primary"
+                color="green"
+                disabled={selected.length === 0}
+                onClick={exportToExcel}
+                className="shadow-md"
+              >
+                Export Selected to Excel
+              </Button>
+            </Stack>
           </Stack>
-          <Button
-            appearance="primary"
-            color="green"
-            disabled={selected.length === 0}
-            onClick={exportToExcel}
-          >
-            Export Selected to Excel
-          </Button>
-        </Stack>
-      </Stack>
-      <Table
-        data={filteredInvoices}
-        autoHeight
-        bordered
-        cellBordered
-        loading={loading}
-        rowClassName={rowData =>
-          rowData && rowData.id && selected.includes(rowData.id)
-            ? 'rs-table-row-selected'
-            : ''
-        }
-        style={{ fontSize: 16 }}
-      >
-        <Column width={50} align="center" fixed>
-          <HeaderCell>
-            <Checkbox
-              checked={selected.length === invoices.length && invoices.length > 0}
-              indeterminate={selected.length > 0 && selected.length < invoices.length}
-              onChange={handleSelectAll}
-            />
-          </HeaderCell>
-          <Cell>
-            {rowData => (
-              <Checkbox
-                checked={selected.includes(rowData.id)}
-                onChange={() => handleSelect(rowData.id)}
-              />
-            )}
-          </Cell>
-        </Column>
-        <Column width={60} align="center" fixed>
-          <HeaderCell>ID</HeaderCell>
-          <Cell dataKey="id" />
-        </Column>
-        <Column width={200} resizable>
-          <HeaderCell>Company Name</HeaderCell>
-          <Cell dataKey="company_name" />
-        </Column>
-        <Column width={120} resizable>
-          <HeaderCell>Total Amount</HeaderCell>
-          <Cell dataKey="price" />
-        </Column>
-        <Column width={120} resizable>
-          <HeaderCell>Date</HeaderCell>
-          <Cell dataKey="date" />
-        </Column>
-        <Column width={120} resizable>
-          <HeaderCell>Uploader</HeaderCell>
-          <Cell dataKey="uploader_name" />
-        </Column>
-        <Column width={240} flexGrow={1}>
-          <HeaderCell>OCR Text</HeaderCell>
-          <Cell>
-            {rowData => (
-              <details>
-                <summary style={{ cursor: 'pointer', color: '#1675e0' }}>Show</summary>
-                <pre style={{ whiteSpace: 'pre-wrap', maxWidth: 400, fontSize: 12, background: '#f7f7fa', padding: 8, borderRadius: 4 }}>{rowData.raw_ocr}</pre>
-              </details>
-            )}
-          </Cell>
-        </Column>
-        <Column width={160} resizable>
-          <HeaderCell>Created At</HeaderCell>
-          <Cell dataKey="created_at" />
-        </Column>
-      </Table>
-      {filteredInvoices.length === 0 && !loading && (
-        <Message type="info" style={{ marginTop: 24 }}>No invoices found.</Message>
-      )}
-    </Panel>
+          <div className="overflow-x-auto rounded-2xl border border-gray-100 bg-white">
+            <Table
+              data={filteredInvoices}
+              autoHeight
+              bordered
+              cellBordered
+              loading={loading}
+              rowClassName={rowData =>
+                rowData && rowData.id && selected.includes(rowData.id)
+                  ? 'rs-table-row-selected'
+                  : ''
+              }
+              className="rounded-2xl"
+              style={{ fontSize: 16, minWidth: 900 }}
+            >
+              <Column width={50} align="center" fixed>
+                <HeaderCell>
+                  <Checkbox
+                    checked={selected.length === invoices.length && invoices.length > 0}
+                    indeterminate={selected.length > 0 && selected.length < invoices.length}
+                    onChange={handleSelectAll}
+                  />
+                </HeaderCell>
+                <Cell>
+                  {rowData => (
+                    <Checkbox
+                      checked={selected.includes(rowData.id)}
+                      onChange={() => handleSelect(rowData.id)}
+                    />
+                  )}
+                </Cell>
+              </Column>
+              <Column width={60} align="center" fixed>
+                <HeaderCell>ID</HeaderCell>
+                <Cell dataKey="id" />
+              </Column>
+              <Column width={200} resizable>
+                <HeaderCell>Company Name</HeaderCell>
+                <Cell dataKey="company_name" />
+              </Column>
+              <Column width={120} resizable>
+                <HeaderCell>Total Amount</HeaderCell>
+                <Cell dataKey="price" />
+              </Column>
+              <Column width={120} resizable>
+                <HeaderCell>Date</HeaderCell>
+                <Cell dataKey="date" />
+              </Column>
+              <Column width={120} resizable>
+                <HeaderCell>Uploader</HeaderCell>
+                <Cell dataKey="uploader_name" />
+              </Column>
+              <Column width={240} flexGrow={1}>
+                <HeaderCell>OCR Text</HeaderCell>
+                <Cell>
+                  {rowData => (
+                    <details>
+                      <summary style={{ cursor: 'pointer', color: '#1675e0' }}>Show</summary>
+                      <pre style={{ whiteSpace: 'pre-wrap', maxWidth: 400, fontSize: 12, background: '#f7f7fa', padding: 8, borderRadius: 4 }}>{rowData.raw_ocr}</pre>
+                    </details>
+                  )}
+                </Cell>
+              </Column>
+              <Column width={160} resizable>
+                <HeaderCell>Created At</HeaderCell>
+                <Cell dataKey="created_at" />
+              </Column>
+            </Table>
+          </div>
+          {filteredInvoices.length === 0 && !loading && (
+            <Message type="info" style={{ marginTop: 24 }}>No invoices found.</Message>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

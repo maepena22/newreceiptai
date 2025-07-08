@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"next dev\" \"node lib/worker.mjs\"",
     "build": "next build",
-    "start": "next start",
+    "start": "concurrently \"next start\" \"node lib/worker.mjs\"",
     "lint": "next lint"
   },
   "dependencies": {
@@ -28,6 +28,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.28",
     "postcss": "^8.5.3",
