@@ -6,24 +6,26 @@ import { getUserFromRequest } from '../../lib/auth';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 
-// Load environment variables
-const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
-const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
+// Environment variables will be loaded at runtime
 const AWS_REGION = process.env.AWS_REGION || 'ap-northeast-1';
 const BUCKET = process.env.AWS_S3_BUCKET || 'ai-receipt-apex';
 
-if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
-  console.error('AWS credentials are not properly configured');
-  return res.status(500).json({ error: 'Server configuration error' });
+function getS3Client() {
+  const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
+  const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
+  
+  if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
+    throw new Error('AWS credentials are not properly configured');
+  }
+  
+  return new S3Client({
+    region: AWS_REGION,
+    credentials: {
+      accessKeyId: AWS_ACCESS_KEY_ID,
+      secretAccessKey: AWS_SECRET_ACCESS_KEY,
+    },
+  });
 }
-
-const s3 = new S3Client({
-  region: AWS_REGION,
-  credentials: {
-    accessKeyId: AWS_ACCESS_KEY_ID,
-    secretAccessKey: AWS_SECRET_ACCESS_KEY,
-  },
-});
 
 export const config = {
   api: {
@@ -36,8 +38,15 @@ export default async function handler(req, res) {
   if (!user) return res.status(401).json({ error: 'Not authenticated' });
 
   if (req.method !== 'POST') {
-    console.error(`[Upload API] Invalid method: ${req.method}`);
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+  
+  let s3;
+  try {
+    s3 = getS3Client();
+  } catch (error) {
+    console.error('Failed to initialize S3 client:', error);
+    return res.status(500).json({ error: 'Server configuration error' });
   }
 
   const form = formidable();
