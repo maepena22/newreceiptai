@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { Progress } from 'rsuite';
+import { useRouter } from 'next/router';
 
 function statusColor(status) {
   switch (status) {
@@ -17,6 +18,8 @@ export default function JobsPage() {
   const [allExpanded, setAllExpanded] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
   const [showJobModal, setShowJobModal] = useState(false);
+  const [user, setUser] = useState(null);
+  const router = useRouter();
   const scrollContainerRef = useRef(null);
   const savedScrollPosition = useRef(0);
 
@@ -36,6 +39,16 @@ export default function JobsPage() {
       setJobs(data);
     }
   };
+
+  useEffect(() => {
+    fetch('/api/auth/me').then(res => {
+      if (res.ok) return res.json();
+      throw new Error('Not authenticated');
+    }).then(data => setUser(data.user)).catch(() => {
+      setUser(null);
+      router.replace('/login');
+    });
+  }, []);
 
   useEffect(() => {
     fetchJobs();
@@ -94,6 +107,9 @@ export default function JobsPage() {
       </div>
     ));
   };
+
+  // Only render the jobs UI if user is authenticated
+  if (!user) return null;
 
   return (
     <div className="max-w-6xl mx-auto p-8">

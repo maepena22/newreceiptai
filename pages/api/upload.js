@@ -2,6 +2,28 @@ import formidable from 'formidable';
 import fs from 'fs';
 import path from 'path';
 import db from '../../lib/db';
+import { getUserFromRequest } from '../../lib/auth';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { v4 as uuidv4 } from 'uuid';
+
+// Load environment variables
+const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
+const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
+const AWS_REGION = process.env.AWS_REGION || 'ap-northeast-1';
+const BUCKET = process.env.AWS_S3_BUCKET || 'ai-receipt-apex';
+
+if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
+  console.error('AWS credentials are not properly configured');
+  return res.status(500).json({ error: 'Server configuration error' });
+}
+
+const s3 = new S3Client({
+  region: AWS_REGION,
+  credentials: {
+    accessKeyId: AWS_ACCESS_KEY_ID,
+    secretAccessKey: AWS_SECRET_ACCESS_KEY,
+  },
+});
 
 export const config = {
   api: {
@@ -10,12 +32,13 @@ export const config = {
 };
 
 export default async function handler(req, res) {
+  const user = getUserFromRequest(req);
+  if (!user) return res.status(401).json({ error: 'Not authenticated' });
+
   if (req.method !== 'POST') {
     console.error(`[Upload API] Invalid method: ${req.method}`);
     return res.status(405).json({ error: 'Method not allowed' });
   }
-
-  console.log('[Upload API] Starting file upload processing');
 
   const form = formidable();
   form.parse(req, async (err, fields, files) => {
@@ -24,34 +47,20 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Upload failed: ' + err.message });
     }
 
-    console.log('[Upload API] Form parsed successfully');
-    console.log('[Upload API] Fields:', fields);
-    console.log('[Upload API] Files:', Object.keys(files));
-
-    // Get uploader_name from fields
-    const uploader_name = fields.uploader_name || '';
-    console.log('[Upload API] Uploader name:', uploader_name);
-
-    // Support multiple files
+    const uploader_name = user.email;
     let uploadedFiles = files.file;
     if (!uploadedFiles) {
-      console.error('[Upload API] No files uploaded');
       return res.status(400).json({ error: 'No file uploaded' });
     }
     if (!Array.isArray(uploadedFiles)) {
       uploadedFiles = [uploadedFiles];
     }
 
-    console.log(`[Upload API] Processing ${uploadedFiles.length} file(s)`);
-
-    // Create a job batch for this upload
     let batchId;
     try {
       batchId = db.createJobBatch(uploader_name);
-      console.log('[Upload API] Created job batch:', batchId);
     } catch (batchError) {
-      console.error('[Upload API] Failed to create job batch:', batchError);
-      return res.status(500).json({ error: 'Failed to create job batch: ' + batchError.message });
+      return res.status(500).json({ error: 'Failed to create job batch' });
     }
 
     const jobIds = [];
@@ -60,67 +69,49 @@ export default async function handler(req, res) {
     for (const uploadedFile of uploadedFiles) {
       try {
         if (!uploadedFile || !uploadedFile.filepath) {
-          console.warn('[Upload API] Skipping invalid file:', uploadedFile);
           errors.push('Invalid file object');
           continue;
         }
-
-        console.log('[Upload API] Processing file:', uploadedFile.originalFilename || 'unknown');
-
-        // Save file to temp directory (if not already there)
-        const tempDir = path.join(process.cwd(), 'temp');
-        if (!fs.existsSync(tempDir)) {
-          console.log('[Upload API] Creating temp directory:', tempDir);
-          fs.mkdirSync(tempDir, { recursive: true });
-        }
-
-        const destPath = path.join(tempDir, path.basename(uploadedFile.filepath));
-        console.log('[Upload API] Copying file to:', destPath);
-
-        try {
-          fs.copyFileSync(uploadedFile.filepath, destPath);
-          console.log('[Upload API] File copied successfully');
-        } catch (copyError) {
-          console.error('[Upload API] File copy failed:', copyError);
-          errors.push(`File copy failed: ${copyError.message}`);
-          continue;
-        }
-
-        // Create job in DB with batch_id
+        // Read file buffer
+        const fileBuffer = fs.readFileSync(uploadedFile.filepath);
+        const ext = path.extname(uploadedFile.originalFilename || '');
+        const uuidName = uuidv4() + ext;
+        // Upload to S3
+        await s3.send(new PutObjectCommand({
+          Bucket: BUCKET,
+          Key: uuidName,
+          Body: fileBuffer,
+          ContentType: uploadedFile.mimetype || 'application/octet-stream',
+        }));
+        const s3Url = `https://${BUCKET}.s3.ap-northeast-1.amazonaws.com/${uuidName}`;
+        // Create job in DB with S3 URL as file_path
         try {
           const stmt = db.prepare(
-            'INSERT INTO jobs (uploader_name, file_path, status, progress, batch_id) VALUES (?, ?, ?, ?, ?)' 
+            'INSERT INTO jobs (uploader_name, file_path, status, progress, batch_id) VALUES (?, ?, ?, ?, ?)'
           );
-          const info = stmt.run(uploader_name, destPath, 'pending', 0, batchId);
+          const info = stmt.run(uploader_name, s3Url, 'pending', 0, batchId);
           jobIds.push(info.lastInsertRowid);
-          console.log('[Upload API] Created job:', info.lastInsertRowid);
         } catch (dbError) {
-          console.error('[Upload API] Database error creating job:', dbError);
           errors.push(`Database error: ${dbError.message}`);
           continue;
         }
-
       } catch (fileError) {
-        console.error('[Upload API] Error processing file:', fileError);
         errors.push(`File processing error: ${fileError.message}`);
       }
     }
 
-    console.log(`[Upload API] Upload complete. Created ${jobIds.length} jobs, ${errors.length} errors`);
-
     if (jobIds.length === 0) {
-      console.error('[Upload API] No jobs created successfully');
-      return res.status(500).json({ 
-        error: 'No files were processed successfully', 
-        details: errors 
+      return res.status(500).json({
+        error: 'No files were processed successfully',
+        details: errors,
       });
     }
 
-    res.json({ 
-      message: 'Upload successful. Processing will continue asynchronously.', 
-      batchId, 
+    res.json({
+      message: 'Upload successful. Processing will continue asynchronously.',
+      batchId,
       jobIds,
-      errors: errors.length > 0 ? errors : undefined
+      errors,
     });
   });
 }
