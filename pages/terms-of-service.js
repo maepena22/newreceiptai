@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FiArrowLeft, FiFileText, FiShield, FiUser, FiAlertTriangle, FiCreditCard, FiX, FiAlertCircle, FiMapPin, FiPhone, FiMail } from 'react-icons/fi';
+import { useTranslation } from '../lib/useTranslation';
 
 // Animation variants
 const fadeInUp = {
@@ -29,6 +30,8 @@ const staggerContainer = {
 };
 
 export default function TermsAndConditions() {
+  const { t, tArray } = useTranslation();
+  
   useEffect(() => {
     // Add smooth scroll behavior
     document.documentElement.style.scrollBehavior = 'smooth';
@@ -47,7 +50,7 @@ export default function TermsAndConditions() {
       </div>
 
       <Head>
-        <title>Terms and Conditions - Receipt OCR</title>
+        <title>{t('pages.terms.title')} - Receipt OCR</title>
         <meta name="description" content="Terms and conditions for using Receipt OCR service" />
       </Head>
 
@@ -74,10 +77,10 @@ export default function TermsAndConditions() {
               <FiFileText className="w-8 h-8" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
-              Terms and <span className="text-red-600">Conditions</span>
+              {t('pages.terms.title')}
             </h1>
             <div className="inline-block px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">
-              Last Updated: July 24, 2025
+              {t('pages.terms.lastUpdated')} {t('pages.terms.date')}
             </div>
           </motion.div>
 
@@ -89,11 +92,11 @@ export default function TermsAndConditions() {
               <div className="absolute -left-3 top-6 w-1.5 h-16 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                 <span className="w-10 h-10 flex items-center justify-center bg-red-50 text-red-600 rounded-lg mr-4">1</span>
-                Acceptance of Terms
+                {t('pages.terms.sections.acceptance.title')}
               </h2>
               <div className="prose prose-lg text-gray-600 pl-14">
                 <p>
-                  By accessing or using the Receipt OCR service ("Service"), you agree to be bound by these Terms and Conditions ("Terms"). If you do not agree to these Terms, please do not use the Service.
+                  {t('pages.terms.sections.acceptance.content')}
                 </p>
               </div>
             </motion.section>
@@ -105,11 +108,11 @@ export default function TermsAndConditions() {
               <div className="absolute -left-3 top-6 w-1.5 h-16 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                 <span className="w-10 h-10 flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg mr-4">2</span>
-                Description of Service
+                {t('pages.terms.sections.description.title')}
               </h2>
               <div className="prose prose-lg text-gray-600 pl-14">
                 <p>
-                  Receipt OCR provides an AI-powered receipt scanning and data extraction service. The Service allows users to upload images of receipts, extract relevant information, and manage their expense data with high accuracy and efficiency.
+                  {t('pages.terms.sections.description.content')}
                 </p>
               </div>
             </motion.section>
@@ -121,7 +124,7 @@ export default function TermsAndConditions() {
               <div className="absolute -left-3 top-6 w-1.5 h-16 bg-green-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                 <span className="w-10 h-10 flex items-center justify-center bg-green-50 text-green-600 rounded-lg mr-4">3</span>
-                User Accounts
+                {t('pages.terms.sections.userAccounts.title')}
               </h2>
               <div className="prose prose-lg text-gray-600 pl-14">
                 <div className="space-y-4">
@@ -129,19 +132,19 @@ export default function TermsAndConditions() {
                     <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-green-50 text-green-600 text-sm font-medium mt-1 mr-3">
                       <FiUser className="w-3.5 h-3.5" />
                     </div>
-                    <p>To access certain features of the Service, you must register for an account.</p>
+                    <p>{t('pages.terms.sections.userAccounts.register')}</p>
                   </div>
                   <div className="flex items-start">
                     <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-green-50 text-green-600 text-sm font-medium mt-1 mr-3">
                       <FiShield className="w-3.5 h-3.5" />
                     </div>
-                    <p>You are responsible for maintaining the confidentiality of your account credentials.</p>
+                    <p>{t('pages.terms.sections.userAccounts.credentials')}</p>
                   </div>
                   <div className="flex items-start">
                     <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-green-50 text-green-600 text-sm font-medium mt-1 mr-3">
                       <FiAlertTriangle className="w-3.5 h-3.5" />
                     </div>
-                    <p>You must be at least 18 years old to use the Service.</p>
+                    <p>{t('pages.terms.sections.userAccounts.age')}</p>
                   </div>
                 </div>
               </div>
@@ -154,7 +157,7 @@ export default function TermsAndConditions() {
               <div className="absolute -left-3 top-6 w-1.5 h-16 bg-amber-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                 <span className="w-10 h-10 flex items-center justify-center bg-amber-50 text-amber-600 rounded-lg mr-4">4</span>
-                User Content
+                {t('pages.terms.sections.userContent.title')}
               </h2>
               <div className="prose prose-lg text-gray-600 pl-14">
                 <div className="space-y-4">
@@ -162,19 +165,19 @@ export default function TermsAndConditions() {
                     <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-amber-50 text-amber-600 text-sm font-medium mt-1 mr-3">
                       <span>4.1</span>
                     </div>
-                    <p>You retain ownership of any content you upload to the Service.</p>
+                    <p>{t('pages.terms.sections.userContent.ownership')}</p>
                   </div>
                   <div className="flex items-start">
                     <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-amber-50 text-amber-600 text-sm font-medium mt-1 mr-3">
                       <span>4.2</span>
                     </div>
-                    <p>By uploading content, you grant us a worldwide, non-exclusive, royalty-free license to use, reproduce, and process your content to provide the Service.</p>
+                    <p>{t('pages.terms.sections.userContent.license')}</p>
                   </div>
                   <div className="flex items-start">
                     <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-amber-50 text-amber-600 text-sm font-medium mt-1 mr-3">
                       <span>4.3</span>
                     </div>
-                    <p>You are solely responsible for the content you upload and any consequences of posting or publishing it.</p>
+                    <p>{t('pages.terms.sections.userContent.responsibility')}</p>
                   </div>
                 </div>
               </div>
@@ -187,18 +190,12 @@ export default function TermsAndConditions() {
               <div className="absolute -left-3 top-6 w-1.5 h-16 bg-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                 <span className="w-10 h-10 flex items-center justify-center bg-red-50 text-red-600 rounded-lg mr-4">5</span>
-                Prohibited Activities
+                {t('pages.terms.sections.prohibitedActivities.title')}
               </h2>
               <div className="prose prose-lg text-gray-600 pl-14">
-                <p className="mb-4">You agree not to:</p>
+                <p className="mb-4">{t('pages.terms.sections.prohibitedActivities.intro')}</p>
                 <ul className="space-y-3">
-                  {[
-                    'Use the Service for any illegal purpose',
-                    'Upload content that violates any third-party rights',
-                    'Attempt to gain unauthorized access to the Service',
-                    'Interfere with or disrupt the Service',
-                    'Use the Service to create a competing product'
-                  ].map((item, index) => (
+                  {tArray('pages.terms.sections.prohibitedActivities.activities').map((item, index) => (
                     <li key={index} className="flex items-start">
                       <div className="flex-shrink-0 flex items-center justify-center w-5 h-5 rounded-full bg-red-50 text-red-600 mr-3 mt-1">
                         <FiX className="w-3 h-3" />
@@ -217,7 +214,7 @@ export default function TermsAndConditions() {
               <div className="absolute -left-3 top-6 w-1.5 h-16 bg-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                 <span className="w-10 h-10 flex items-center justify-center bg-purple-50 text-purple-600 rounded-lg mr-4">6</span>
-                Subscription and Payments
+                {t('pages.terms.sections.subscriptionPayments.title')}
               </h2>
               <div className="prose prose-lg text-gray-600 pl-14">
                 <div className="space-y-4">
@@ -225,19 +222,19 @@ export default function TermsAndConditions() {
                     <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-purple-50 text-purple-600 text-sm font-medium mt-1 mr-3">
                       <FiCreditCard className="w-3.5 h-3.5" />
                     </div>
-                    <p>The Service offers both free and paid subscription plans.</p>
+                    <p>{t('pages.terms.sections.subscriptionPayments.plans')}</p>
                   </div>
                   <div className="flex items-start">
                     <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-purple-50 text-purple-600 text-sm font-medium mt-1 mr-3">
                       <FiCreditCard className="w-3.5 h-3.5" />
                     </div>
-                    <p>Paid subscriptions are billed on a recurring basis until canceled.</p>
+                    <p>{t('pages.terms.sections.subscriptionPayments.billing')}</p>
                   </div>
                   <div className="flex items-start">
                     <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-purple-50 text-purple-600 text-sm font-medium mt-1 mr-3">
                       <FiAlertCircle className="w-3.5 h-3.5" />
                     </div>
-                    <p>All fees are non-refundable except as required by law.</p>
+                    <p>{t('pages.terms.sections.subscriptionPayments.refunds')}</p>
                   </div>
                 </div>
               </div>
@@ -250,11 +247,11 @@ export default function TermsAndConditions() {
               <div className="absolute -left-3 top-6 w-1.5 h-16 bg-rose-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                 <span className="w-10 h-10 flex items-center justify-center bg-rose-50 text-rose-600 rounded-lg mr-4">7</span>
-                Termination
+                {t('pages.terms.sections.termination.title')}
               </h2>
               <div className="prose prose-lg text-gray-600 pl-14">
                 <p>
-                  We may terminate or suspend your account and access to the Service immediately, without prior notice, for conduct that we believe violates these Terms or is harmful to other users, us, or third parties, or for any other reason.
+                  {t('pages.terms.sections.termination.content')}
                 </p>
               </div>
             </motion.section>
@@ -266,12 +263,12 @@ export default function TermsAndConditions() {
               <div className="absolute -left-3 top-6 w-1.5 h-16 bg-orange-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                 <span className="w-10 h-10 flex items-center justify-center bg-orange-50 text-orange-600 rounded-lg mr-4">8</span>
-                Disclaimer of Warranties
+                {t('pages.terms.sections.disclaimer.title')}
               </h2>
               <div className="prose prose-lg text-gray-600 pl-14">
                 <div className="p-4 bg-orange-50 border-l-4 border-orange-400 rounded-r-lg">
                   <p className="text-orange-700 font-medium">
-                    THE SERVICE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND. WE DO NOT GUARANTEE THAT THE SERVICE WILL BE UNINTERRUPTED, TIMELY, SECURE, OR ERROR-FREE.
+                    {t('pages.terms.sections.disclaimer.content')}
                   </p>
                 </div>
               </div>
@@ -284,12 +281,12 @@ export default function TermsAndConditions() {
               <div className="absolute -left-3 top-6 w-1.5 h-16 bg-amber-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                 <span className="w-10 h-10 flex items-center justify-center bg-amber-50 text-amber-600 rounded-lg mr-4">9</span>
-                Limitation of Liability
+                {t('pages.terms.sections.limitation.title')}
               </h2>
               <div className="prose prose-lg text-gray-600 pl-14">
                 <div className="p-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
                   <p className="text-amber-700 font-medium">
-                    TO THE MAXIMUM EXTENT PERMITTED BY LAW, WE SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES RESULTING FROM YOUR USE OF OR INABILITY TO USE THE SERVICE.
+                    {t('pages.terms.sections.limitation.content')}
                   </p>
                 </div>
               </div>
@@ -302,14 +299,14 @@ export default function TermsAndConditions() {
               <div className="absolute -left-3 top-6 w-1.5 h-16 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                 <span className="w-10 h-10 flex items-center justify-center bg-blue-50 text-blue-600 rounded-lg mr-4">10</span>
-                Governing Law
+                {t('pages.terms.sections.governingLaw.title')}
               </h2>
               <div className="prose prose-lg text-gray-600 pl-14">
                 <div className="flex items-start">
                   <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-blue-50 text-blue-600 text-sm font-medium mt-1 mr-3">
                     <FiMapPin className="w-3.5 h-3.5" />
                   </div>
-                  <p>These Terms shall be governed by and construed in accordance with the laws of Japan, without regard to its conflict of law provisions.</p>
+                  <p>{t('pages.terms.sections.governingLaw.content')}</p>
                 </div>
               </div>
             </motion.section>
@@ -321,14 +318,14 @@ export default function TermsAndConditions() {
               <div className="absolute -left-3 top-6 w-1.5 h-16 bg-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
                 <span className="w-10 h-10 flex items-center justify-center bg-purple-50 text-purple-600 rounded-lg mr-4">11</span>
-                Changes to Terms
+                {t('pages.terms.sections.changes.title')}
               </h2>
               <div className="prose prose-lg text-gray-600 pl-14">
                 <div className="flex items-start">
                   <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-purple-50 text-purple-600 text-sm font-medium mt-1 mr-3">
                     <FiAlertCircle className="w-3.5 h-3.5" />
                   </div>
-                  <p>We reserve the right to modify these Terms at any time. We will provide notice of any changes by posting the updated Terms on our website and updating the "Last Updated" date.</p>
+                  <p>{t('pages.terms.sections.changes.content')}</p>
                 </div>
               </div>
             </motion.section>
@@ -340,24 +337,24 @@ export default function TermsAndConditions() {
               <div className="absolute -left-3 top-6 w-1.5 h-16 bg-indigo-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
                 <span className="w-10 h-10 flex items-center justify-center bg-indigo-50 text-indigo-600 rounded-lg mr-4">12</span>
-                Contact Us
+                {t('pages.terms.sections.contact.title')}
               </h2>
               <div className="prose prose-lg text-gray-600 pl-14">
                 <p className="mb-6">
-                  If you have any questions about these Terms, please contact us at:
+                  {t('pages.terms.sections.contact.intro')}
                 </p>
                 <div className="space-y-4">
                   <div className="flex items-start">
                     <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-indigo-50 text-indigo-600 text-sm font-medium mt-1 mr-3">
                       <FiMail className="w-3.5 h-3.5" />
                     </div>
-                    <p>Email: <a href="mailto:legal@receiptocr.example.com" className="text-indigo-600 hover:text-indigo-800">legal@receiptocr.example.com</a></p>
+                    <p>{t('pages.terms.sections.contact.email')} <a href="mailto:legal@receiptocr.example.com" className="text-indigo-600 hover:text-indigo-800">legal@receiptocr.example.com</a></p>
                   </div>
                   <div className="flex items-start">
                     <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-indigo-50 text-indigo-600 text-sm font-medium mt-1 mr-3">
                       <FiMapPin className="w-3.5 h-3.5" />
                     </div>
-                    <p>Address: 〒150-0001 東京都渋谷区神宮前6丁目23番4号 桑野ビル2F</p>
+                    <p>{t('pages.terms.sections.contact.address')} 〒150-0001 東京都渋谷区神宮前6丁目23番4号 桑野ビル2F</p>
                   </div>
                 </div>
               </div>
@@ -369,13 +366,13 @@ export default function TermsAndConditions() {
             >
               <Link href="/" className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium group transition-colors">
                 <FiArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" />
-                Back to Home
+                {t('pages.terms.sections.contact.backToHome')}
               </Link>
               <button 
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 className="text-sm text-gray-500 hover:text-gray-700 flex items-center transition-colors"
               >
-                Back to top
+                {t('pages.terms.sections.contact.backToTop')}
                 <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
                 </svg>

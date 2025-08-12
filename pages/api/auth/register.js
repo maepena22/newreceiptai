@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-  const { email, password } = req.body;
+  const { email, password, name, mobile, address } = req.body;
   if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
   
   const existingUser = await db.getUserByEmail(email);
@@ -29,12 +29,21 @@ export default async function handler(req, res) {
   const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
   const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
   
+  let userId;
   if (ADMIN_EMAIL && ADMIN_PASSWORD && 
       email === ADMIN_EMAIL && 
       password === ADMIN_PASSWORD) {
-    db.createUser(email, password_hash, 1);
+    const result = db.createUser(email, password_hash, 1);
+    userId = result.lastInsertRowid;
   } else {
-    db.createUser(email, password_hash);
+    const result = db.createUser(email, password_hash);
+    userId = result.lastInsertRowid;
   }
+
+  // Update user profile with additional details if provided
+  if (name || mobile || address) {
+    db.updateUserProfile(userId, { name, mobile, address });
+  }
+
   res.status(201).json({ success: true });
 }

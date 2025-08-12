@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FiArrowLeft, FiUsers, FiGlobe, FiTrendingUp, FiAward, FiCheckCircle, FiMail, FiMapPin, FiPhone } from 'react-icons/fi';
 import { FaRobot, FaShieldAlt, FaChartLine, FaLightbulb } from 'react-icons/fa';
+import { useTranslation } from '../lib/useTranslation';
 
 // Animation variants
 const fadeInUp = {
@@ -30,6 +31,8 @@ const staggerContainer = {
 };
 
 export default function AboutUs() {
+  const { t } = useTranslation();
+  
   useEffect(() => {
     // Add smooth scroll behavior
     document.documentElement.style.scrollBehavior = 'smooth';
@@ -48,7 +51,7 @@ export default function AboutUs() {
       </div>
 
       <Head>
-        <title>About Us - Receipt OCR</title>
+        <title>{t('pages.about.title')} - Receipt OCR</title>
         <meta name="description" content="Learn about Receipt OCR and our mission" />
       </Head>
 
@@ -71,7 +74,7 @@ export default function AboutUs() {
             transition={{ delay: 0.2, duration: 0.8 }}
             className="inline-block mb-6 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20"
           >
-            <span className="text-sm font-medium text-white/90">About Our Company</span>
+            <span className="text-sm font-medium text-white/90">{t('pages.about.hero.badge')}</span>
           </motion.div>
           
           <motion.h1 
@@ -80,8 +83,8 @@ export default function AboutUs() {
             transition={{ delay: 0.3, duration: 0.8 }}
             className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
           >
-            Redefining Receipt<br />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-200 to-yellow-400">Management</span>
+            {t('pages.about.hero.title')}<br />
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-200 to-yellow-400">{t('pages.about.hero.titleHighlight')}</span>
           </motion.h1>
           
           <motion.p 
@@ -90,7 +93,7 @@ export default function AboutUs() {
             transition={{ delay: 0.4, duration: 0.8 }}
             className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-10"
           >
-            Empowering businesses and individuals with AI-powered receipt management solutions that save time and reduce errors.
+            {t('pages.about.hero.subtitle')}
           </motion.p>
           
           <motion.div 
@@ -100,13 +103,13 @@ export default function AboutUs() {
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
             <Link href="/contact" className="px-8 py-4 bg-white text-red-600 font-semibold rounded-xl hover:bg-gray-100 transition-colors duration-300 flex items-center justify-center">
-              Get in Touch
+              {t('pages.about.hero.getInTouch')}
               <svg className="w-5 h-5 ml-2 -mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </Link>
             <Link href="#our-mission" className="px-8 py-4 bg-transparent border-2 border-white text-white font-semibold rounded-xl hover:bg-white/10 transition-colors duration-300 flex items-center justify-center">
-              Our Mission
+              {t('pages.about.hero.ourMission')}
               <svg className="w-5 h-5 ml-2 -mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
               </svg>
@@ -123,10 +126,10 @@ export default function AboutUs() {
         >
           <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8 grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { number: '10K+', label: 'Active Users' },
-              { number: '5M+', label: 'Receipts Processed' },
-              { number: '99.9%', label: 'Uptime' },
-              { number: '24/7', label: 'Support' }
+              { number: '10K+', label: t('pages.about.stats.activeUsers') },
+              { number: '5M+', label: t('pages.about.stats.receiptsProcessed') },
+              { number: '99.9%', label: t('pages.about.stats.uptime') },
+              { number: '24/7', label: t('pages.about.stats.support') }
             ].map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-white mb-2">{stat.number}</div>
@@ -168,20 +171,20 @@ export default function AboutUs() {
             
             <motion.div variants={fadeInUp} className="lg:pl-10">
               <div className="inline-block px-3 py-1 text-sm font-medium text-red-600 bg-red-50 rounded-full mb-4">
-                Our Story
+                {t('pages.about.story.badge')}
               </div>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-                Revolutionizing Receipt Management <span className="text-red-600">Since 2023</span>
+                {t('pages.about.story.title')} <span className="text-red-600">{t('pages.about.story.titleHighlight')}</span>
               </h2>
               <div className="prose prose-lg text-gray-600 space-y-6">
                 <p>
-                  Founded in 2023, Receipt OCR emerged from a simple yet powerful insight: businesses and individuals in Japan were losing countless hours to manual receipt processing, leading to inefficiencies and costly errors in financial management.
+                  {t('pages.about.story.paragraph1')}
                 </p>
                 <p>
-                  Our diverse team of AI visionaries, software engineers, and financial experts united to develop a groundbreaking solution. We combined cutting-edge OCR technology with deep learning algorithms specifically fine-tuned for the unique challenges of Japanese receipts, from intricate kanji characters to complex layouts.
+                  {t('pages.about.story.paragraph2')}
                 </p>
                 <p>
-                  What began as an ambitious startup has rapidly evolved into Japan's most trusted receipt digitization platform, serving thousands of satisfied users across industries. Today, we stand at the forefront of financial technology, continuously pushing the boundaries of what's possible in automated document processing.
+                  {t('pages.about.story.paragraph3')}
                 </p>
               </div>
             </motion.div>
@@ -199,13 +202,13 @@ export default function AboutUs() {
         >
           <div className="text-center max-w-4xl mx-auto mb-16">
             <motion.div variants={fadeInUp} className="inline-block px-4 py-2 bg-red-50 text-red-600 rounded-full text-sm font-medium mb-4">
-              Our Mission & Values
+              {t('pages.about.mission.badge')}
             </motion.div>
             <motion.h2 variants={fadeInUp} className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Driving Innovation in <span className="text-red-600">Financial Technology</span>
+              {t('pages.about.mission.title')} <span className="text-red-600">{t('pages.about.mission.titleHighlight')}</span>
             </motion.h2>
             <motion.p variants={fadeInUp} className="text-xl text-gray-600">
-              We're on a mission to transform how businesses handle financial documents through cutting-edge AI and exceptional user experiences.
+              {t('pages.about.mission.subtitle')}
             </motion.p>
           </div>
           
@@ -213,48 +216,48 @@ export default function AboutUs() {
             {[
               {
                 icon: <FaLightbulb className="w-6 h-6" />,
-                title: 'Innovation',
-                description: 'We push the boundaries of AI and machine learning to deliver the most accurate and efficient receipt processing solution on the market.',
+                title: t('pages.about.mission.values.innovation.title'),
+                description: t('pages.about.mission.values.innovation.description'),
                 color: 'from-purple-500 to-indigo-600',
                 bg: 'purple-50',
                 text: 'purple-600'
               },
               {
                 icon: <FiUsers className="w-6 h-6" />,
-                title: 'User-Centric',
-                description: 'Our users inspire everything we build. We listen, learn, and adapt to deliver solutions that truly make a difference in their daily workflows.',
+                title: t('pages.about.mission.values.userCentric.title'),
+                description: t('pages.about.mission.values.userCentric.description'),
                 color: 'from-red-500 to-pink-600',
                 bg: 'red-50',
                 text: 'red-600'
               },
               {
                 icon: <FiTrendingUp className="w-6 h-6" />,
-                title: 'Efficiency',
-                description: 'We help businesses save time and reduce errors through intelligent automation and streamlined processes.',
+                title: t('pages.about.mission.values.efficiency.title'),
+                description: t('pages.about.mission.values.efficiency.description'),
                 color: 'from-blue-500 to-cyan-600',
                 bg: 'blue-50',
                 text: 'blue-600'
               },
               {
                 icon: <FiGlobe className="w-6 h-6" />,
-                title: 'Global Vision',
-                description: 'While we excel in Japanese receipt processing, our technology is designed with global financial documentation in mind.',
+                title: t('pages.about.mission.values.globalVision.title'),
+                description: t('pages.about.mission.values.globalVision.description'),
                 color: 'from-green-500 to-teal-600',
                 bg: 'green-50',
                 text: 'green-600'
               },
               {
                 icon: <FaShieldAlt className="w-6 h-6" />,
-                title: 'Security First',
-                description: 'We implement enterprise-grade security measures to protect your sensitive financial data at every step.',
+                title: t('pages.about.mission.values.securityFirst.title'),
+                description: t('pages.about.mission.values.securityFirst.description'),
                 color: 'from-amber-500 to-orange-600',
                 bg: 'amber-50',
                 text: 'amber-600'
               },
               {
                 icon: <FiAward className="w-6 h-6" />,
-                title: 'Excellence',
-                description: 'We take pride in delivering exceptional quality and continuously improving our solutions based on user feedback.',
+                title: t('pages.about.mission.values.excellence.title'),
+                description: t('pages.about.mission.values.excellence.description'),
                 color: 'from-indigo-500 to-violet-600',
                 bg: 'indigo-50',
                 text: 'indigo-600'
@@ -286,41 +289,29 @@ export default function AboutUs() {
         >
           <div className="text-center max-w-4xl mx-auto mb-16">
             <motion.div variants={fadeInUp} className="inline-block px-4 py-2 bg-red-50 text-red-600 rounded-full text-sm font-medium mb-4">
-              Our Team
+              {t('pages.about.team.badge')}
             </motion.div>
             <motion.h2 variants={fadeInUp} className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Meet the <span className="text-red-600">Visionaries</span> Behind Our Success
+              {t('pages.about.team.title')} <span className="text-red-600">{t('pages.about.team.titleHighlight')}</span> Behind Our Success
             </motion.h2>
             <motion.p variants={fadeInUp} className="text-xl text-gray-600">
-              A diverse team of experts united by a passion for innovation and excellence in financial technology.
+              {t('pages.about.team.subtitle')}
             </motion.p>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {[
               { 
-                name: 'Yuki Tanaka', 
-                role: 'CEO & Founder',
-                bio: 'Serial entrepreneur with 15+ years in fintech and AI',
-                emoji: '👩‍💼'
-              },
-              { 
-                name: 'Hiroshi Sato', 
-                role: 'CTO',
-                bio: 'AI/ML expert with a focus on computer vision',
+                name: t('pages.about.team.members.yusuke.name'), 
+                role: t('pages.about.team.members.yusuke.role'),
+                bio: t('pages.about.team.members.yusuke.bio'),
                 emoji: '👨‍💻'
               },
               { 
-                name: 'Aiko Watanabe', 
-                role: 'Head of AI Research',
-                bio: 'PhD in Machine Learning, specializing in NLP',
-                emoji: '👩‍🔬'
-              },
-              { 
-                name: 'Kenji Yamamoto', 
-                role: 'Product Lead',
-                bio: 'Product strategist with fintech experience',
-                emoji: '👨‍💼'
+                name: 'Mae Pena', 
+                role: t('pages.about.team.members.aiko.role'),
+                bio: t('pages.about.team.members.aiko.bio'),
+                emoji: '👩‍💼'
               }
             ].map((member, index) => (
               <motion.div 
@@ -368,15 +359,15 @@ export default function AboutUs() {
               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-repeat"></div>
             </div>
             <div className="relative z-10">
-              <h3 className="text-2xl md:text-3xl font-bold mb-4">Want to Join Our Team?</h3>
+              <h3 className="text-2xl md:text-3xl font-bold mb-4">{t('pages.about.team.joinTeam.title')}</h3>
               <p className="text-lg text-white/90 max-w-2xl mx-auto mb-8">
-                We're always looking for talented individuals who are passionate about AI and fintech innovation.
+                {t('pages.about.team.joinTeam.subtitle')}
               </p>
               <a 
                 href="#" 
                 className="inline-flex items-center justify-center px-8 py-4 bg-white text-red-600 font-semibold rounded-xl hover:bg-gray-100 transition-colors duration-300"
               >
-                View Open Positions
+                {t('pages.about.team.joinTeam.cta')}
                 <svg className="w-5 h-5 ml-2 -mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
@@ -408,8 +399,8 @@ export default function AboutUs() {
               transition={{ delay: 0.2 }}
               className="text-4xl md:text-5xl font-bold mb-6 leading-tight"
             >
-              Ready to Transform Your <br className="hidden md:block" />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-200 to-yellow-400">Receipt Management?</span>
+              {t('pages.about.cta.title')} <br className="hidden md:block" />
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-yellow-200 to-yellow-400">{t('pages.about.cta.titleHighlight')}</span>
             </motion.h2>
             
             <motion.p 
@@ -419,7 +410,7 @@ export default function AboutUs() {
               transition={{ delay: 0.3 }}
               className="text-xl mb-10 max-w-2xl mx-auto text-white/90"
             >
-              Join thousands of businesses and individuals who trust Receipt OCR for fast, accurate, and secure receipt processing.
+              {t('pages.about.cta.subtitle')}
             </motion.p>
             
             <motion.div 
@@ -433,7 +424,7 @@ export default function AboutUs() {
                 href="/register" 
                 className="px-8 py-4 bg-white text-red-600 font-semibold rounded-xl hover:bg-gray-100 transition-colors duration-300 flex items-center justify-center"
               >
-                Get Started Free
+                {t('pages.about.cta.getStarted')}
                 <svg className="w-5 h-5 ml-2 -mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
@@ -442,7 +433,7 @@ export default function AboutUs() {
                 href="/contact" 
                 className="px-8 py-4 bg-transparent border-2 border-white text-white font-semibold rounded-xl hover:bg-white/10 transition-colors duration-300 flex items-center justify-center"
               >
-                Contact Sales
+                {t('pages.about.cta.contactSales')}
                 <svg className="w-5 h-5 ml-2 -mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
@@ -458,15 +449,15 @@ export default function AboutUs() {
             >
               <div className="flex items-center">
                 <FiCheckCircle className="w-5 h-5 mr-2 text-green-300" />
-                No credit card required
+                {t('pages.about.cta.features.noCreditCard')}
               </div>
               <div className="flex items-center">
                 <FiCheckCircle className="w-5 h-5 mr-2 text-green-300" />
-                14-day free trial
+                {t('pages.about.cta.features.freeTrial')}
               </div>
               <div className="flex items-center">
                 <FiCheckCircle className="w-5 h-5 mr-2 text-green-300" />
-                Cancel anytime
+                {t('pages.about.cta.features.cancelAnytime')}
               </div>
             </motion.div>
           </div>

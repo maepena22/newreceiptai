@@ -5,13 +5,24 @@ import { serialize } from 'cookie';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  
+  // Check if JWT_SECRET is configured
+  if (!process.env.JWT_SECRET) {
+    console.error('JWT_SECRET environment variable is not set');
+    return res.status(500).json({ error: 'Server configuration error' });
+  }
+  
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
+  
   const user = db.getUserByEmail(email);
   if (!user) return res.status(401).json({ error: 'Invalid credentials' });
+  
   const valid = await bcrypt.compare(password, user.password_hash);
   if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
+  
   const token = jwt.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '30d' });
+  
   res.setHeader('Set-Cookie', serialize('token', token, {
     httpOnly: true,
     path: '/',
@@ -19,5 +30,6 @@ export default async function handler(req, res) {
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
   }));
+  
   res.json({ success: true });
 } 

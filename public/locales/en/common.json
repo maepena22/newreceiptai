@@ -1,0 +1,673 @@
+{
+  "nav": {
+    "home": "Home",
+    "upload": "Upload",
+    "invoices": "Invoices",
+    "jobs": "Jobs",
+    "subscription": "Subscription",
+    "profile": "Profile",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "home": {
+    "hero": {
+      "title": "Effortless Japanese Receipt AI",
+      "subtitle": "Instantly extract, organize, and manage your Japanese receipts with AI. Upload in bulk, track progress, and export results—all in a beautiful SaaS dashboard.",
+      "getStarted": "Get Started Free",
+      "tryDemo": "Try Upload Demo"
+    },
+    "features": {
+      "title": "Why Choose Our Receipt AI SaaS?",
+      "subtitle": "Experience the power of AI-driven receipt management with our cutting-edge features",
+      "aiPowered": {
+        "title": "AI-Powered Solution",
+        "description": "State-of-the-art Japanese OCR and GPT AI for accurate, fast extraction of receipt data.",
+        "features": [
+          "Advanced Japanese text recognition",
+          "Smart data extraction",
+          "AI-powered categorization",
+          "Multi-language support"
+        ]
+      },
+      "bulkUpload": {
+        "title": "Bulk Upload & Processing",
+        "description": "Upload multiple receipts at once and track processing jobs in real time.",
+        "features": [
+          "Drag & drop interface",
+          "Batch processing",
+          "Real-time progress tracking",
+          "Background processing"
+        ]
+      },
+      "dashboard": {
+        "title": "Beautiful Dashboard",
+        "description": "View, search, and manage your receipts in a modern, responsive SaaS dashboard.",
+        "features": [
+          "Interactive data visualization",
+          "Advanced search & filters",
+          "Custom reports",
+          "Export to multiple formats"
+        ]
+      },
+      "security": {
+        "title": "Secure & Private",
+        "description": "Your data is encrypted, stored securely, and never shared. Enterprise-grade privacy.",
+        "features": [
+          "End-to-end encryption",
+          "GDPR & JP Act compliance",
+          "Regular security audits",
+          "Role-based access control"
+        ]
+      }
+    },
+    "testimonials": {
+      "title": "What Our Users Say",
+      "testimonial1": {
+        "text": "This is the best receipt ai tool I've ever used. The accuracy is amazing and the dashboard is beautiful!",
+        "author": "Satoshi",
+        "location": "Tokyo"
+      },
+      "testimonial2": {
+        "text": "Bulk upload saved me hours. I love the real-time job tracking and export features.",
+        "author": "Yuki",
+        "location": "Osaka"
+      },
+      "testimonial3": {
+        "text": "Finally, a secure and private way to manage my receipts. Highly recommended!",
+        "author": "Kenji",
+        "location": "Fukuoka"
+      }
+    },
+    "pricing": {
+      "title": "Simple, Transparent Pricing",
+      "free": {
+        "title": "Free",
+        "price": "$0",
+        "features": [
+          "10 receipts/month",
+          "Basic dashboard",
+          "Email support"
+        ],
+        "cta": "Get Started"
+      },
+      "pro": {
+        "title": "Pro",
+        "price": "$19",
+        "period": "/mo",
+        "features": [
+          "10,000 receipts/month",
+          "Advanced dashboard",
+          "Priority support",
+          "Export to CSV/Excel"
+        ],
+        "cta": "Start Pro"
+      },
+      "enterprise": {
+        "title": "Enterprise",
+        "price": "Contact",
+        "features": [
+          "Custom volume",
+          "Team dashboard",
+          "Dedicated support",
+          "API access"
+        ],
+        "cta": "Contact Sales"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "questions": [
+        {
+          "q": "How accurate is the OCR?",
+          "a": "Our AI-powered OCR is trained on thousands of Japanese receipts and achieves industry-leading accuracy, even on complex layouts."
+        },
+        {
+          "q": "Is my data secure?",
+          "a": "Yes! All data is encrypted in transit and at rest. We never share your data with third parties."
+        },
+        {
+          "q": "Can I try before I buy?",
+          "a": "Absolutely! Our Free plan lets you try all core features, and you can upgrade anytime."
+        },
+        {
+          "q": "How do I get support?",
+          "a": "We offer email and priority support for all plans. Pro and Enterprise users get dedicated help."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Ready to transform your receipt workflow?",
+      "subtitle": "Sign up now and start extracting value from your receipts in seconds.",
+      "features": [
+        "AI-powered Solution",
+        "Bulk upload & instant results",
+        "Export to CSV/Excel",
+        "Secure, private, and easy to use"
+      ],
+      "getStarted": "Get Started Free",
+      "tryUpload": "Try Uploading"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your account to continue",
+      "email": "Email Address",
+      "password": "Password",
+      "emailPlaceholder": "Enter your email",
+      "passwordPlaceholder": "Enter your password",
+      "submit": "Sign In",
+      "loading": "Logging in...",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create one here",
+      "backToHome": "Back to Home"
+    },
+    "register": {
+      "title": "Create Your Account",
+      "subtitle": "Join thousands of users managing their receipts with AI",
+      "email": "Email Address",
+      "name": "Full Name",
+      "mobile": "Phone Number",
+      "address": "Address",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "emailPlaceholder": "Enter your email address",
+      "namePlaceholder": "Enter your full name",
+      "mobilePlaceholder": "Enter your phone number (optional)",
+      "addressPlaceholder": "Enter your address (optional)",
+      "passwordPlaceholder": "Create a strong password",
+      "confirmPasswordPlaceholder": "Confirm your password",
+      "submit": "Create Account",
+      "loading": "Creating Account...",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in here",
+      "backToHome": "Back to Home",
+      "terms": "By creating an account, you agree to our",
+      "termsLink": "Terms of Service",
+      "and": "and",
+      "privacyLink": "Privacy Policy"
+    },
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "passwordRequired": "Password is required",
+      "passwordLength": "Password must be at least 6 characters long",
+      "confirmPasswordRequired": "Please confirm your password",
+      "passwordsMismatch": "Passwords do not match",
+      "nameRequired": "Full name is required",
+      "mobileInvalid": "Please enter a valid phone number",
+      "loginFailed": "Login failed. Please try again.",
+      "registrationFailed": "Registration failed. Please try again."
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "open": "Open",
+    "select": "Select",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "export": "Export",
+    "import": "Import",
+    "download": "Download",
+    "upload": "Upload",
+    "view": "View",
+    "details": "Details",
+    "settings": "Settings",
+    "profile": "Profile",
+    "logout": "Logout",
+    "language": "Language",
+    "english": "English",
+    "japanese": "日本語"
+  },
+  "footer": {
+    "brand": "Receipt AI",
+    "home": "Home",
+    "demo": "Demo",
+    "signUp": "Sign Up",
+    "support": "Support",
+    "aboutUs": "About Us",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "contact": "Contact",
+    "company": "Apex Corporation",
+    "address": "〒150-0001 6-23-4 Jingumae, Shibuya-ku, Tokyo",
+    "email": "info@apex.tokyo",
+    "phone": "(03) 6822-8754",
+    "copyright": "© 2021 Apex Corporation. All Rights Reserved"
+  },
+  "pages": {
+    "about": {
+      "title": "About Us",
+      "hero": {
+        "badge": "About Our Company",
+        "title": "Redefining Receipt",
+        "titleHighlight": "Management",
+        "subtitle": "Empowering businesses and individuals with AI-powered receipt management solutions that save time and reduce errors.",
+        "getInTouch": "Get in Touch",
+        "ourMission": "Our Mission"
+      },
+      "stats": {
+        "activeUsers": "Active Users",
+        "receiptsProcessed": "Receipts Processed",
+        "uptime": "Uptime",
+        "support": "Support"
+      },
+      "story": {
+        "badge": "Our Story",
+        "title": "Revolutionizing Receipt Management",
+        "titleHighlight": "Since 2023",
+        "paragraph1": "Founded in 2023, Receipt OCR emerged from a simple yet powerful insight: businesses and individuals in Japan were losing countless hours to manual receipt processing, leading to inefficiencies and costly errors in financial management.",
+        "paragraph2": "Our diverse team of AI visionaries, software engineers, and financial experts united to develop a groundbreaking solution. We combined cutting-edge OCR technology with deep learning algorithms specifically fine-tuned for the unique challenges of Japanese receipts, from intricate kanji characters to complex layouts.",
+        "paragraph3": "What began as an ambitious startup has rapidly evolved into Japan's most trusted receipt digitization platform, serving thousands of satisfied users across industries. Today, we stand at the forefront of financial technology, continuously pushing the boundaries of what's possible in automated document processing."
+      },
+      "mission": {
+        "badge": "Our Mission & Values",
+        "title": "Driving Innovation in",
+        "titleHighlight": "Financial Technology",
+        "subtitle": "We're on a mission to transform how businesses handle financial documents through cutting-edge AI and exceptional user experiences.",
+        "values": {
+          "innovation": {
+            "title": "Innovation",
+            "description": "We push the boundaries of AI and machine learning to deliver the most accurate and efficient receipt processing solution on the market."
+          },
+          "userCentric": {
+            "title": "User-Centric",
+            "description": "Our users inspire everything we build. We listen, learn, and adapt to deliver solutions that truly make a difference in their daily workflows."
+          },
+          "efficiency": {
+            "title": "Efficiency",
+            "description": "We help businesses save time and reduce errors through intelligent automation and streamlined processes."
+          },
+          "globalVision": {
+            "title": "Global Vision",
+            "description": "While we excel in Japanese receipt processing, our technology is designed with global financial documentation in mind."
+          },
+          "securityFirst": {
+            "title": "Security First",
+            "description": "We implement enterprise-grade security measures to protect your sensitive financial data at every step."
+          },
+          "excellence": {
+            "title": "Excellence",
+            "description": "We take pride in delivering exceptional quality and continuously improving our solutions based on user feedback."
+          }
+        }
+      },
+      "team": {
+        "badge": "Our Team",
+        "title": "Meet the",
+        "titleHighlight": "Visionaries",
+        "subtitle": "A diverse team of experts united by a passion for innovation and excellence in financial technology.",
+        "members": {
+          "yusuke": {
+            "name": "Yusuke Shimoto",
+            "role": "CEO of Apex Tokyo & Tech Company Founder",
+            "bio": "Visionary tech entrepreneur and CEO leading innovation in Tokyo's startup ecosystem. Founded multiple successful tech companies with a focus on AI and digital transformation."
+          },
+          "hiroshi": {
+            "name": "Hiroshi Sato",
+            "role": "CTO",
+            "bio": "AI/ML expert with a focus on computer vision"
+          },
+          "aiko": {
+            "name": "Aiko Watanabe",
+            "role": "Head of AI Research",
+            "bio": "PhD in Machine Learning, specializing in NLP"
+          },
+          "kenji": {
+            "name": "Kenji Yamamoto",
+            "role": "Product Lead",
+            "bio": "Product strategist with fintech experience"
+          }
+        },
+        "joinTeam": {
+          "title": "Want to Join Our Team?",
+          "subtitle": "We're always looking for talented individuals who are passionate about AI and fintech innovation.",
+          "cta": "View Open Positions"
+        }
+      },
+      "cta": {
+        "title": "Ready to Transform Your",
+        "titleHighlight": "Receipt Management?",
+        "subtitle": "Join thousands of businesses and individuals who trust Receipt OCR for fast, accurate, and secure receipt processing.",
+        "getStarted": "Get Started Free",
+        "contactSales": "Contact Sales",
+        "features": {
+          "noCreditCard": "No credit card required",
+          "freeTrial": "14-day free trial",
+          "cancelAnytime": "Cancel anytime"
+        }
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "lastUpdated": "Last updated on",
+      "date": "July 24, 2025",
+      "sections": {
+        "introduction": {
+          "title": "Introduction",
+          "content": "Welcome to Receipt OCR. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you about how we look after your personal data when you visit our website and tell you about your privacy rights."
+        },
+        "dataCollection": {
+          "title": "Data We Collect",
+          "subtitle": "We may collect, use, store, and transfer different kinds of personal data about you, including:",
+          "types": {
+            "identity": {
+              "title": "Identity Data",
+              "description": "Name, username, or similar identifier"
+            },
+            "contact": {
+              "title": "Contact Data",
+              "description": "Email address, phone number"
+            },
+            "technical": {
+              "title": "Technical Data",
+              "description": "IP address, browser type, time zone"
+            },
+            "usage": {
+              "title": "Usage Data",
+              "description": "How you use our website and services"
+            },
+            "receipt": {
+              "title": "Receipt Data",
+              "description": "Images and extracted information"
+            },
+            "profile": {
+              "title": "Profile Data",
+              "description": "Preferences, feedback, and survey responses"
+            }
+          }
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms and Conditions",
+      "lastUpdated": "Last Updated:",
+      "date": "July 24, 2025",
+      "sections": {
+        "acceptance": {
+          "title": "Acceptance of Terms",
+          "content": "By accessing or using the Receipt OCR service (\"Service\"), you agree to be bound by these Terms and Conditions (\"Terms\"). If you do not agree to these Terms, please do not use the Service."
+        },
+        "description": {
+          "title": "Description of Service",
+          "content": "Receipt OCR provides an AI-powered receipt scanning and data extraction service. The Service allows users to upload images of receipts, extract relevant information, and manage their expense data with high accuracy and efficiency."
+        },
+        "userAccounts": {
+          "title": "User Accounts",
+          "register": "To access certain features of the Service, you must register for an account.",
+          "credentials": "You are responsible for maintaining the confidentiality of your account credentials.",
+          "age": "You must be at least 18 years old to use the Service."
+        },
+        "userContent": {
+          "title": "User Content",
+          "ownership": "You retain ownership of any content you upload to the Service.",
+          "license": "By uploading content, you grant us a worldwide, non-exclusive, royalty-free license to use, reproduce, and process your content to provide the Service.",
+          "responsibility": "You are solely responsible for the content you upload and any consequences of posting or publishing it."
+        },
+        "prohibitedActivities": {
+          "title": "Prohibited Activities",
+          "intro": "You agree not to:",
+          "activities": [
+            "Use the Service for any illegal purpose",
+            "Upload content that violates any third-party rights",
+            "Attempt to gain unauthorized access to the Service",
+            "Interfere with or disrupt the Service",
+            "Use the Service to create a competing product"
+          ]
+        },
+        "subscriptionPayments": {
+          "title": "Subscription and Payments",
+          "plans": "The Service offers both free and paid subscription plans.",
+          "billing": "Paid subscriptions are billed on a recurring basis until canceled.",
+          "refunds": "All fees are non-refundable except as required by law."
+        },
+        "termination": {
+          "title": "Termination",
+          "content": "We may terminate or suspend your account and access to the Service immediately, without prior notice, for conduct that we believe violates these Terms or is harmful to other users, us, or third parties, or for any other reason."
+        },
+        "disclaimer": {
+          "title": "Disclaimer of Warranties",
+          "content": "THE SERVICE IS PROVIDED \"AS IS\" WITHOUT WARRANTY OF ANY KIND. WE DO NOT GUARANTEE THAT THE SERVICE WILL BE UNINTERRUPTED, TIMELY, SECURE, OR ERROR-FREE."
+        },
+        "limitation": {
+          "title": "Limitation of Liability",
+          "content": "TO THE MAXIMUM EXTENT PERMITTED BY LAW, WE SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES RESULTING FROM YOUR USE OF OR INABILITY TO USE THE SERVICE."
+        },
+        "governingLaw": {
+          "title": "Governing Law",
+          "content": "These Terms shall be governed by and construed in accordance with the laws of Japan, without regard to its conflict of law provisions."
+        },
+        "changes": {
+          "title": "Changes to Terms",
+          "content": "We reserve the right to modify these Terms at any time. We will provide notice of any changes by posting the updated Terms on our website and updating the \"Last Updated\" date."
+        },
+        "contact": {
+          "title": "Contact Us",
+          "intro": "If you have any questions about these Terms, please contact us at:",
+          "email": "Email:",
+          "address": "Address:",
+          "backToHome": "Back to Home",
+          "backToTop": "Back to top"
+        }
+      }
+    },
+    "profile": {
+      "title": "Profile",
+      "loading": "Loading...",
+      "email": "Email:",
+      "name": "Name:",
+      "mobile": "Mobile:",
+      "address": "Address:",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "deleteAccount": "Delete Account",
+      "deleteConfirm": "Are you sure you want to delete your account? This cannot be undone.",
+      "profileUpdated": "Profile updated successfully.",
+      "saving": "Saving...",
+      "deleting": "Deleting..."
+    },
+    "upload": {
+      "title": "Japanese Receipt OCR SaaS",
+      "subtitle": "Effortlessly extract, organize, and manage your Japanese receipts with AI-powered OCR and GPT. Upload in bulk, track progress, and export results—all in a beautiful SaaS dashboard.",
+      "loggedInAs": "Logged in as",
+      "selectImages": "Select Receipt Images",
+      "clickOrDrag": "Click or drag files here",
+      "filesSelected": "file(s) selected",
+      "noFileSelected": "No file selected",
+      "uploadAndExtract": "Upload and Extract",
+      "processing": "Processing...",
+      "uploadComplete": "Upload Complete",
+      "processingAsync": "Your file(s) are being processed asynchronously.",
+      "checkJobsPage": "Check the Jobs page for status and results.",
+      "batchId": "Batch ID:",
+      "jobIds": "Job IDs:"
+    },
+    "subscription": {
+      "title": "Choose Your Plan",
+      "subtitle": "Select the perfect plan for your receipt processing needs. All plans include our advanced OCR technology and secure processing.",
+      "loading": "Loading...",
+      "paymentNotAvailable": "Payment Processing Not Available",
+      "stripeNotConfigured": "Stripe payment processing is not configured. Please contact support to enable subscription features.",
+      "contactSupport": "Contact Support",
+      "goHome": "Go Home",
+      "currentPlan": "Current Plan",
+      "subscribeNow": "Subscribe Now",
+      "processing": "Processing...",
+      "moneyBackGuarantee": "All plans include a 30-day money-back guarantee",
+      "cancelAnytime": "Cancel anytime. No hidden fees."
+    },
+    "subscriptionSuccess": {
+      "processing": "Processing your subscription...",
+      "paymentSuccessful": "Payment Successful!",
+      "thankYou": "Thank you for subscribing to our service.",
+      "subscriptionDetails": "Subscription Details",
+      "plan": "Plan:",
+      "status": "Status:",
+      "startProcessing": "Start Processing Receipts",
+      "goToProfile": "Go to Profile",
+      "confirmationEmail": "You'll receive a confirmation email shortly with your receipt."
+    },
+    "subscriptionCancel": {
+      "paymentCancelled": "Payment Cancelled",
+      "noCharges": "Your subscription payment was cancelled. No charges were made.",
+      "tryAgain": "Try Again",
+      "goHome": "Go Home",
+      "contactSupport": "If you have any questions, please contact our support team."
+    },
+    "invoices": {
+      "title": "Invoices",
+      "loading": "Loading...",
+      "search": "Search invoices...",
+      "noInvoices": "No invoices found",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "export": "Export",
+      "selectAll": "Select All",
+      "clearSelection": "Clear Selection",
+      "companyName": "Company Name",
+      "receiptType": "Receipt Type",
+      "date": "Date",
+      "price": "Price",
+      "uploader": "Uploader",
+      "actions": "Actions",
+      "saving": "Saving...",
+      "deleting": "Deleting...",
+      "exporting": "Exporting...",
+      "saved": "Saved successfully",
+      "deleted": "Deleted successfully",
+      "exported": "Exported successfully"
+    },
+    "jobs": {
+      "title": "Jobs",
+      "loading": "Loading...",
+      "noJobs": "No jobs found",
+      "expandAll": "Expand All",
+      "collapseAll": "Collapse All",
+      "batchId": "Batch ID:",
+      "status": "Status:",
+      "created": "Created:",
+      "completed": "Completed:",
+      "progress": "Progress:",
+      "error": "Error:",
+      "viewDetails": "View Details",
+      "close": "Close",
+      "done": "Done",
+      "processing": "Processing",
+      "failed": "Failed",
+      "pending": "Pending"
+    },
+    "privacyExtended": {
+      "howWeUse": {
+        "title": "How We Use Your Data",
+        "intro": "We will only use your personal data when the law allows us to, including to:",
+        "purposes": [
+          {
+            "title": "Service Provision",
+            "description": "Provide and maintain our receipt OCR service"
+          },
+          {
+            "title": "Transaction Processing",
+            "description": "Process your payments and subscriptions"
+          },
+          {
+            "title": "Service Improvement",
+            "description": "Enhance and optimize our platform"
+          },
+          {
+            "title": "Communication",
+            "description": "Send important updates and support"
+          },
+          {
+            "title": "Analytics",
+            "description": "Understand usage patterns"
+          },
+          {
+            "title": "Legal Compliance",
+            "description": "Meet regulatory requirements"
+          }
+        ]
+      },
+      "dataSecurity": {
+        "title": "Data Security",
+        "intro": "We've implemented enterprise-grade security measures to protect your data:",
+        "measures": [
+          {
+            "title": "Encryption",
+            "description": "All data is encrypted in transit and at rest using AES-256"
+          },
+          {
+            "title": "Access Control",
+            "description": "Strict role-based access controls and authentication"
+          },
+          {
+            "title": "Regular Audits",
+            "description": "Frequent security audits and penetration testing"
+          },
+          {
+            "title": "Compliance",
+            "description": "Adherence to global data protection regulations"
+          }
+        ]
+      },
+      "legalRights": {
+        "title": "Your Legal Rights",
+        "intro": "Under data protection laws, you have rights regarding your personal data:",
+        "rights": [
+          {
+            "title": "Access",
+            "description": "Request a copy of your data"
+          },
+          {
+            "title": "Rectification",
+            "description": "Correct inaccurate information"
+          },
+          {
+            "title": "Erasure",
+            "description": "Request deletion of your data"
+          },
+          {
+            "title": "Restriction",
+            "description": "Limit how we use your data"
+          },
+          {
+            "title": "Portability",
+            "description": "Request transfer of your data"
+          },
+          {
+            "title": "Objection",
+            "description": "Object to certain processing"
+          },
+          {
+            "title": "Withdraw Consent",
+            "description": "Withdraw previously given consent"
+          },
+          {
+            "title": "Complain",
+            "description": "Lodge a complaint with authorities"
+          }
+        ]
+      },
+      "needHelp": {
+        "title": "Need Help?",
+        "intro": "If you have any questions about this privacy policy or our privacy practices, our team is here to help.",
+        "emailUs": "Email Us",
+        "ourOffice": "Our Office",
+        "backToHomepage": "Back to Homepage"
+      }
+    }
+  }
+} 

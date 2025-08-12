@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { useAuth } from '../lib/authContext';
+import { useTranslation } from '../lib/useTranslation';
 
 export default function ProfilePage() {
-  const [user, setUser] = useState(null);
+  const { user, fetchUser } = useAuth();
+  const { t } = useTranslation();
+  const [subscription, setSubscription] = useState(null);
   const [loading, setLoading] = useState(true);
   const [edit, setEdit] = useState(false);
   const [form, setForm] = useState({ name: '', mobile: '', address: '' });
@@ -13,23 +18,26 @@ export default function ProfilePage() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch('/api/auth/me').then(res => {
-      if (res.ok) return res.json();
-      throw new Error('Not authenticated');
-    }).then(data => {
-      setUser(data.user);
+    if (user) {
       setForm({
-        name: data.user.name || '',
-        mobile: data.user.mobile || '',
-        address: data.user.address || '',
+        name: user.name || '',
+        mobile: user.mobile || '',
+        address: user.address || '',
       });
-      setLoading(false);
-    }).catch(() => {
-      setUser(null);
+      fetch('/api/subscriptions/get-subscription')
+        .then(res => res.json())
+        .then(data => {
+          setSubscription(data.subscription);
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+        });
+    } else if (user === null) {
       setLoading(false);
       router.replace('/login');
-    });
-  }, []);
+    }
+  }, [user, router]);
 
   const handleChange = e => {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
@@ -48,8 +56,8 @@ export default function ProfilePage() {
       });
       if (!res.ok) throw new Error('Failed to update profile');
       const data = await res.json();
-      setUser(data.user);
-      setSuccess('Profile updated successfully.');
+      await fetchUser(); // Refresh user data
+      setSuccess(t('pages.profile.profileUpdated'));
       setEdit(false);
     } catch (err) {
       setError(err.message);
@@ -59,7 +67,7 @@ export default function ProfilePage() {
   };
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete your account? This cannot be undone.')) return;
+    if (!confirm(t('pages.profile.deleteConfirm'))) return;
     setDeleting(true);
     setError('');
     try {
@@ -73,40 +81,81 @@ export default function ProfilePage() {
     }
   };
 
-  if (loading) return <div className="text-center text-gray-500">Loading...</div>;
+  if (loading) return <div className="text-center text-gray-500">{t('pages.profile.loading')}</div>;
   if (!user) return null;
 
   return (
     <div className="max-w-xl mx-auto bg-white shadow-2xl rounded-3xl p-12 border border-gray-100 animate-fade-in">
-      <h2 className="text-3xl font-extrabold text-red-700 mb-6">Profile</h2>
+      <h2 className="text-3xl font-extrabold text-red-700 mb-6">{t('pages.profile.title')}</h2>
       {error && <div className="mb-4 text-red-600 font-semibold">{error}</div>}
       {success && <div className="mb-4 text-green-600 font-semibold">{success}</div>}
       {!edit ? (
         <>
       <div className="mb-4">
-        <span className="font-semibold text-gray-700">Email:</span>
+        <span className="font-semibold text-gray-700">{t('pages.profile.email')}</span>
         <span className="ml-2 text-gray-900">{user.email}</span>
       </div>
           <div className="mb-4">
-            <span className="font-semibold text-gray-700">Name:</span>
+            <span className="font-semibold text-gray-700">{t('pages.profile.name')}</span>
             <span className="ml-2 text-gray-900">{user.name || '-'}</span>
           </div>
           <div className="mb-4">
-            <span className="font-semibold text-gray-700">Mobile:</span>
+            <span className="font-semibold text-gray-700">{t('pages.profile.mobile')}</span>
             <span className="ml-2 text-gray-900">{user.mobile || '-'}</span>
           </div>
           <div className="mb-4">
-            <span className="font-semibold text-gray-700">Address:</span>
+            <span className="font-semibold text-gray-700">{t('pages.profile.address')}</span>
             <span className="ml-2 text-gray-900">{user.address || '-'}</span>
           </div>
-      <div className="mb-4">
-        <span className="font-semibold text-gray-700">Account Created:</span>
-        <span className="ml-2 text-gray-900">{user.created_at ? new Date(user.created_at).toLocaleString() : '-'}</span>
-      </div>
+          <div className="mb-4">
+            <span className="font-semibold text-gray-700">Account Created:</span>
+            <span className="ml-2 text-gray-900">{user.created_at ? new Date(user.created_at).toLocaleString() : '-'}</span>
+          </div>
+          
+          {/* Subscription Section */}
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+            <h3 className="font-semibold text-gray-700 mb-2">Subscription</h3>
+            {subscription ? (
+              <div className="space-y-2">
+                <div>
+                  <span className="font-medium text-gray-700">Plan:</span>
+                  <span className="ml-2 text-gray-900 capitalize">{subscription.plan_type}</span>
+                </div>
+                <div>
+                  <span className="font-medium text-gray-700">Status:</span>
+                  <span className={`ml-2 capitalize ${
+                    subscription.status === 'active' ? 'text-green-600' : 
+                    subscription.status === 'past_due' ? 'text-yellow-600' : 'text-red-600'
+                  }`}>
+                    {subscription.status}
+                  </span>
+                </div>
+                {subscription.current_period_end && (
+                  <div>
+                    <span className="font-medium text-gray-700">Next billing:</span>
+                    <span className="ml-2 text-gray-900">
+                      {new Date(subscription.current_period_end).toLocaleDateString()}
+                    </span>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-gray-600">
+                <p className="mb-2">No active subscription</p>
+                <Link
+                  href="/subscription"
+                  className="inline-block bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
+                >
+                  Subscribe Now
+                </Link>
+              </div>
+            )}
+          </div>
+          
           <div className="flex gap-4 mt-8">
-            <button onClick={() => setEdit(true)} className="bg-gradient-to-r from-red-600 to-pink-500 text-white font-bold py-2 px-6 rounded-xl shadow hover:from-red-700 hover:to-pink-600 transition-all duration-200">Edit</button>
+            <button onClick={() => setEdit(true)} className="bg-gradient-to-r from-red-600 to-pink-500 text-white font-bold py-2 px-6 rounded-xl shadow hover:from-red-700 hover:to-pink-600 transition-all duration-200">{t('pages.profile.edit')}</button>
             <button onClick={handleDelete} disabled={deleting} className="bg-white border border-red-200 text-red-700 font-bold py-2 px-6 rounded-xl shadow hover:bg-red-50 transition-all duration-200 disabled:opacity-50">
-              {deleting ? 'Deleting...' : 'Delete Account'}
+              {deleting ? t('pages.profile.deleting') : t('pages.profile.deleteAccount')}
             </button>
           </div>
         </>
@@ -126,9 +175,9 @@ export default function ProfilePage() {
           </div>
           <div className="flex gap-4 mt-8">
             <button type="submit" disabled={saving} className="bg-gradient-to-r from-red-600 to-pink-500 text-white font-bold py-2 px-6 rounded-xl shadow hover:from-red-700 hover:to-pink-600 transition-all duration-200 disabled:opacity-50">
-              {saving ? 'Saving...' : 'Save'}
+              {saving ? t('pages.profile.saving') : t('pages.profile.save')}
             </button>
-            <button type="button" onClick={() => setEdit(false)} className="bg-white border border-red-200 text-red-700 font-bold py-2 px-6 rounded-xl shadow hover:bg-red-50 transition-all duration-200">Cancel</button>
+            <button type="button" onClick={() => setEdit(false)} className="bg-white border border-red-200 text-red-700 font-bold py-2 px-6 rounded-xl shadow hover:bg-red-50 transition-all duration-200">{t('pages.profile.cancel')}</button>
           </div>
         </form>
       )}

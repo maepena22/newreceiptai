@@ -1,38 +1,18 @@
 import Link from 'next/link';
 import { MdEmail, MdPhone, MdLocationOn, MdBusiness, MdCheckCircle } from 'react-icons/md';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useAuth } from '../lib/authContext';
+import { useTranslation } from '../lib/useTranslation';
 
 
 export default function Home() {
   // FAQ Accordion State
   const [openFaq, setOpenFaq] = useState(null);
-  const [user, setUser] = useState(null);
   const [activeFeature, setActiveFeature] = useState(null);
+  const { user } = useAuth();
+  const { t, tArray } = useTranslation();
   
-  useEffect(() => {
-    fetch('/api/auth/me').then(res => {
-      if (res.ok) return res.json();
-      throw new Error('Not authenticated');
-    }).then(data => setUser(data.user)).catch(() => setUser(null));
-  }, []);
-  const faqData = [
-    {
-      q: 'How accurate is the OCR?',
-      a: 'Our AI-powered OCR is trained on thousands of Japanese receipts and achieves industry-leading accuracy, even on complex layouts.'
-    },
-    {
-      q: 'Is my data secure?',
-      a: 'Yes! All data is encrypted in transit and at rest. We never share your data with third parties.'
-    },
-    {
-      q: 'Can I try before I buy?',
-      a: 'Absolutely! Our Free plan lets you try all core features, and you can upgrade anytime.'
-    },
-    {
-      q: 'How do I get support?',
-      a: 'We offer email and priority support for all plans. Pro and Enterprise users get dedicated help.'
-    },
-  ];
+  const faqData = tArray('home.faq.questions');
 
   return (
     <>
@@ -41,22 +21,22 @@ export default function Home() {
       <section className="relative w-full max-w-5xl mx-auto flex flex-col items-center justify-center text-center py-20 px-4 animate-fade-in overflow-hidden">
 
         <h1 className="text-5xl md:text-6xl font-extrabold text-red-700 mb-6 tracking-tight leading-tight">
-          Effortless Japanese Receipt Ai
+          {t('home.hero.title')}
         </h1>
         <p className="text-lg md:text-2xl text-gray-700 mb-8 max-w-2xl">
-          Instantly extract, organize, and manage your Japanese receipts with AI. Upload in bulk, track progress, and export results—all in a beautiful SaaS dashboard.
+          {t('home.hero.subtitle')}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
         {!user && 
           <Link href="/register" passHref legacyBehavior>
             <a className="bg-gradient-to-r from-red-600 to-pink-500 hover:from-red-700 hover:to-pink-600 text-white font-bold py-4 px-10 rounded-2xl text-lg shadow-lg transition-all duration-200">
-              Get Started Free
+              {t('home.hero.getStarted')}
             </a>
           </Link>
         }
           <Link href="/upload" passHref legacyBehavior>
             <a className="bg-white border border-red-200 text-red-700 font-bold py-4 px-10 rounded-2xl text-lg shadow hover:bg-red-50 transition-all duration-200">
-              Try Upload Demo
+              {t('home.hero.tryDemo')}
             </a>
           </Link>
         </div>
@@ -64,8 +44,8 @@ export default function Home() {
 
       {/* Interactive Features Section */}
       <section className="w-full max-w-7xl mx-auto py-16 px-4 animate-fade-in-up">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-4">Why Choose Our Receipt AI SaaS?</h2>
-        <p className="text-lg text-gray-600 text-center mb-12 max-w-2xl mx-auto">Experience the power of AI-driven receipt management with our cutting-edge features</p>
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-4">{t('home.features.title')}</h2>
+        <p className="text-lg text-gray-600 text-center mb-12 max-w-2xl mx-auto">{t('home.features.subtitle')}</p>
         
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Feature Buttons */}
@@ -74,54 +54,34 @@ export default function Home() {
               {
                 id: 'ai-powered',
                 icon: '🤖',
-                title: 'AI-Powered Solution',
-                description: 'State-of-the-art Japanese OCR and GPT AI for accurate, fast extraction of receipt data.',
+                title: t('home.features.aiPowered.title'),
+                description: t('home.features.aiPowered.description'),
                 video: '/videos/ai-demo.mp4',
-                features: [
-                  'Advanced Japanese text recognition',
-                  'Smart data extraction',
-                  'AI-powered categorization',
-                  'Multi-language support'
-                ]
+                features: tArray('home.features.aiPowered.features')
               },
               {
                 id: 'bulk-upload',
                 icon: '📂',
-                title: 'Bulk Upload & Processing',
-                description: 'Upload multiple receipts at once and track processing jobs in real time.',
+                title: t('home.features.bulkUpload.title'),
+                description: t('home.features.bulkUpload.description'),
                 video: '/videos/upload-demo.mp4',
-                features: [
-                  'Drag & drop interface',
-                  'Batch processing',
-                  'Real-time progress tracking',
-                  'Background processing'
-                ]
+                features: tArray('home.features.bulkUpload.features')
               },
               {
                 id: 'dashboard',
                 icon: '📊',
-                title: 'Beautiful Dashboard',
-                description: 'View, search, and manage your receipts in a modern, responsive SaaS dashboard.',
+                title: t('home.features.dashboard.title'),
+                description: t('home.features.dashboard.description'),
                 video: '/videos/dashboard-demo.mp4',
-                features: [
-                  'Interactive data visualization',
-                  'Advanced search & filters',
-                  'Custom reports',
-                  'Export to multiple formats'
-                ]
+                features: tArray('home.features.dashboard.features')
               },
               {
                 id: 'security',
                 icon: '🔒',
-                title: 'Secure & Private',
-                description: 'Your data is encrypted, stored securely, and never shared. Enterprise-grade privacy.',
+                title: t('home.features.security.title'),
+                description: t('home.features.security.description'),
                 video: '/videos/security-demo.mp4',
-                features: [
-                  'End-to-end encryption',
-                  'GDPR & JP Act compliance',
-                  'Regular security audits',
-                  'Role-based access control'
-                ]
+                features: tArray('home.features.security.features')
               }
             ].map((feature, index) => (
               <button
@@ -197,7 +157,7 @@ export default function Home() {
 
       {/* Testimonials Section */}
       <section className="w-full max-w-5xl mx-auto py-20 px-4 animate-fade-in-up">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-14">What Our Users Say</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-14">{t('home.testimonials.title')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Testimonial 1 */}
           <div className="relative bg-gradient-to-br from-white via-red-50 to-blue-50 rounded-3xl shadow-xl p-10 flex flex-col items-center text-center group transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
@@ -205,9 +165,9 @@ export default function Home() {
             <div className="w-20 h-20 rounded-full border-4 border-white shadow-lg mb-4 overflow-hidden flex items-center justify-center">
               <img src="/avatar1.jpg" alt="Satoshi" className="object-cover w-full h-full scale-100" style={{transition: 'transform 0.3s'}} />
             </div>
-            <p className="text-gray-700 mb-6 text-lg font-medium leading-relaxed">This is the best receipt ai tool I've ever used. The accuracy is amazing and the dashboard is beautiful!</p>
-            <span className="font-semibold text-red-700">Satoshi</span>
-            <span className="text-xs text-gray-400 mt-1">Tokyo</span>
+            <p className="text-gray-700 mb-6 text-lg font-medium leading-relaxed">{t('home.testimonials.testimonial1.text')}</p>
+            <span className="font-semibold text-red-700">{t('home.testimonials.testimonial1.author')}</span>
+            <span className="text-xs text-gray-400 mt-1">{t('home.testimonials.testimonial1.location')}</span>
           </div>
           {/* Testimonial 2 */}
           <div className="relative bg-gradient-to-br from-white via-pink-50 to-red-100 rounded-3xl shadow-xl p-10 flex flex-col items-center text-center group transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
@@ -215,9 +175,9 @@ export default function Home() {
             <div className="w-20 h-20 rounded-full border-4 border-white shadow-lg mb-4 overflow-hidden flex items-center justify-center">
               <img src="/avatar2.avif" alt="Yuki" className="object-cover w-full h-full scale-110" style={{transition: 'transform 0.3s'}} />
             </div>
-            <p className="text-gray-700 mb-6 text-lg font-medium leading-relaxed">Bulk upload saved me hours. I love the real-time job tracking and export features.</p>
-            <span className="font-semibold text-red-700">Yuki</span>
-            <span className="text-xs text-gray-400 mt-1">Osaka</span>
+            <p className="text-gray-700 mb-6 text-lg font-medium leading-relaxed">{t('home.testimonials.testimonial2.text')}</p>
+            <span className="font-semibold text-red-700">{t('home.testimonials.testimonial2.author')}</span>
+            <span className="text-xs text-gray-400 mt-1">{t('home.testimonials.testimonial2.location')}</span>
           </div>
           {/* Testimonial 3 */}
           <div className="relative bg-gradient-to-br from-white via-blue-50 to-pink-100 rounded-3xl shadow-xl p-10 flex flex-col items-center text-center group transition-transform duration-300 hover:scale-105 hover:shadow-2xl">
@@ -225,61 +185,59 @@ export default function Home() {
             <div className="w-20 h-20 rounded-full border-4 border-white shadow-lg mb-4 overflow-hidden flex items-center justify-center">
               <img src="/avatar3.avif" alt="Kenji" className="object-cover w-full h-full scale-110" style={{transition: 'transform 0.3s'}} />
             </div>
-            <p className="text-gray-700 mb-6 text-lg font-medium leading-relaxed">Finally, a secure and private way to manage my receipts. Highly recommended!</p>
-            <span className="font-semibold text-red-700">Kenji</span>
-            <span className="text-xs text-gray-400 mt-1">Fukuoka</span>
+            <p className="text-gray-700 mb-6 text-lg font-medium leading-relaxed">{t('home.testimonials.testimonial3.text')}</p>
+            <span className="font-semibold text-red-700">{t('home.testimonials.testimonial3.author')}</span>
+            <span className="text-xs text-gray-400 mt-1">{t('home.testimonials.testimonial3.location')}</span>
           </div>
         </div>
       </section>
 
       {/* Pricing Section */}
       <section className="w-full max-w-5xl mx-auto py-16 px-4 animate-fade-in-up">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-12">Simple, Transparent Pricing</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-12">{t('home.pricing.title')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-white rounded-2xl shadow p-8 flex flex-col items-center text-center border-2 border-red-200">
-            <h3 className="text-xl font-bold mb-2 text-red-700">Free</h3>
-            <p className="text-3xl font-extrabold mb-4">$0</p>
+            <h3 className="text-xl font-bold mb-2 text-red-700">{t('home.pricing.free.title')}</h3>
+            <p className="text-3xl font-extrabold mb-4">{t('home.pricing.free.price')}</p>
             <ul className="text-gray-600 mb-6 space-y-2">
-              <li>10 receipts/month</li>
-              <li>Basic dashboard</li>
-              <li>Email support</li>
+              {tArray('home.pricing.free.features').map((feature, index) => (
+                <li key={index}>{feature}</li>
+              ))}
             </ul>
            
             <Link href="/register" passHref legacyBehavior>
-              <a className="bg-gradient-to-r from-red-600 to-pink-500 text-white font-bold py-2 px-6 rounded-xl shadow hover:from-red-700 hover:to-pink-600 transition-all duration-200">Get Started</a>
+              <a className="bg-gradient-to-r from-red-600 to-pink-500 text-white font-bold py-2 px-6 rounded-xl shadow hover:from-red-700 hover:to-pink-600 transition-all duration-200">{t('home.pricing.free.cta')}</a>
             </Link>
           
           </div>
           <div className="bg-white rounded-2xl shadow p-8 flex flex-col items-center text-center border-4 border-red-500 scale-105">
-            <h3 className="text-xl font-bold mb-2 text-red-700">Pro</h3>
-            <p className="text-3xl font-extrabold mb-4">$19<span className="text-base font-normal">/mo</span></p>
+            <h3 className="text-xl font-bold mb-2 text-red-700">{t('home.pricing.pro.title')}</h3>
+            <p className="text-3xl font-extrabold mb-4">{t('home.pricing.pro.price')}<span className="text-base font-normal">{t('home.pricing.pro.period')}</span></p>
             <ul className="text-gray-600 mb-6 space-y-2">
-              <li>Unlimited receipts</li>
-              <li>Advanced dashboard</li>
-              <li>Priority support</li>
-              <li>Export to CSV/Excel</li>
+              {tArray('home.pricing.pro.features').map((feature, index) => (
+                <li key={index}>{feature}</li>
+              ))}
             </ul>
             <Link href="/register" passHref legacyBehavior>
-              <a className="bg-gradient-to-r from-red-600 to-pink-500 text-white font-bold py-2 px-6 rounded-xl shadow hover:from-red-700 hover:to-pink-600 transition-all duration-200">Start Pro</a>
+              <a className="bg-gradient-to-r from-red-600 to-pink-500 text-white font-bold py-2 px-6 rounded-xl shadow hover:from-red-700 hover:to-pink-600 transition-all duration-200">{t('home.pricing.pro.cta')}</a>
             </Link>
           </div>
           <div className="bg-white rounded-2xl shadow p-8 flex flex-col items-center text-center border-2 border-red-200">
-            <h3 className="text-xl font-bold mb-2 text-red-700">Enterprise</h3>
-            <p className="text-3xl font-extrabold mb-4">Contact</p>
+            <h3 className="text-xl font-bold mb-2 text-red-700">{t('home.pricing.enterprise.title')}</h3>
+            <p className="text-3xl font-extrabold mb-4">{t('home.pricing.enterprise.price')}</p>
             <ul className="text-gray-600 mb-6 space-y-2">
-              <li>Custom volume</li>
-              <li>Team dashboard</li>
-              <li>Dedicated support</li>
-              <li>API access</li>
+              {tArray('home.pricing.enterprise.features').map((feature, index) => (
+                <li key={index}>{feature}</li>
+              ))}
             </ul>
-            <a href="mailto:sales@yourdomain.com" className="bg-gradient-to-r from-red-600 to-pink-500 text-white font-bold py-2 px-6 rounded-xl shadow hover:from-red-700 hover:to-pink-600 transition-all duration-200">Contact Sales</a>
+            <a href="mailto:sales@yourdomain.com" className="bg-gradient-to-r from-red-600 to-pink-500 text-white font-bold py-2 px-6 rounded-xl shadow hover:from-red-700 hover:to-pink-600 transition-all duration-200">{t('home.pricing.enterprise.cta')}</a>
           </div>
         </div>
       </section>
 
       {/* FAQ Section */}
       <section className="w-full max-w-4xl mx-auto py-16 px-4 animate-fade-in-up">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-12">Frequently Asked Questions</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-12">{t('home.faq.title')}</h2>
         <div className="space-y-4">
           {faqData.map((item, idx) => (
             <div key={idx} className="bg-white rounded-xl shadow">
@@ -311,25 +269,26 @@ export default function Home() {
           </div>
           {/* Right: CTA */}
           <div className="w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Ready to transform your receipt workflow?</h2>
-            <p className="text-lg text-gray-700 mb-4">Sign up now and start extracting value from your receipts in seconds.</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">{t('home.cta.title')}</h2>
+            <p className="text-lg text-gray-700 mb-4">{t('home.cta.subtitle')}</p>
             <ul className="mb-8 space-y-3 w-full max-w-xs md:max-w-none mx-auto">
-              <li className="flex items-center gap-2 text-gray-700 text-base"><MdCheckCircle className="text-green-500 text-xl" /> AI-powered Solution</li>
-              <li className="flex items-center gap-2 text-gray-700 text-base"><MdCheckCircle className="text-green-500 text-xl" /> Bulk upload & instant results</li>
-              <li className="flex items-center gap-2 text-gray-700 text-base"><MdCheckCircle className="text-green-500 text-xl" /> Export to CSV/Excel</li>
-              <li className="flex items-center gap-2 text-gray-700 text-base"><MdCheckCircle className="text-green-500 text-xl" /> Secure, private, and easy to use</li>
+              {tArray('home.cta.features').map((feature, index) => (
+                <li key={index} className="flex items-center gap-2 text-gray-700 text-base">
+                  <MdCheckCircle className="text-green-500 text-xl" /> {feature}
+                </li>
+              ))}
             </ul>
             {!user && 
             <Link href="/register" passHref legacyBehavior>
               <a className="bg-gradient-to-r from-red-600 to-pink-500 hover:from-red-700 hover:to-pink-600 text-white font-bold py-4 px-10 rounded-2xl text-lg shadow-lg transition-all duration-200">
-                Get Started Free
+                {t('home.cta.getStarted')}
               </a>
             </Link>
             }
             {user && 
             <Link href="/upload" passHref legacyBehavior>
               <a className="bg-gradient-to-r from-red-600 to-pink-500 hover:from-red-700 hover:to-pink-600 text-white font-bold py-4 px-10 rounded-2xl text-lg shadow-lg transition-all duration-200">
-                Try Uploading   
+                {t('home.cta.tryUpload')}
               </a>
             </Link>
             }

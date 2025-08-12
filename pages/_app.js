@@ -4,20 +4,18 @@ import 'rsuite/dist/rsuite-no-reset.min.css';
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Footer from '../components/Footer';
+import { AuthProvider, useAuth } from '../lib/authContext';
+import { LanguageProvider } from '../lib/languageContext';
+import LanguageToggle from '../components/LanguageToggle';
+import { useTranslation } from '../lib/useTranslation';
 
-export default function MyApp({ Component, pageProps }) {
-  const [user, setUser] = useState(null);
+function AppContent({ Component, pageProps }) {
+  const { user, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [navbarOpen, setNavbarOpen] = useState(false);
   const router = useRouter();
   const avatarRef = useRef(null);
-
-  useEffect(() => {
-    fetch('/api/auth/me').then(res => {
-      if (res.ok) return res.json();
-      throw new Error('Not authenticated');
-    }).then(data => setUser(data.user)).catch(() => setUser(null));
-  }, []);
+  const { t } = useTranslation();
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -36,8 +34,7 @@ export default function MyApp({ Component, pageProps }) {
   }, [dropdownOpen]);
 
   const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
-    setUser(null);
+    await logout();
     window.location.href = '/login';
   };
   const showNavbar = router.pathname !== '/login';
@@ -68,20 +65,23 @@ export default function MyApp({ Component, pageProps }) {
             {/* Desktop nav links */}
             <div className="hidden md:flex gap-2 ml-4">
               <Link href="/" passHref legacyBehavior>
-                <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50">Home</a>
+                <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50">{t('nav.home')}</a>
               </Link>
               {user && (
                 <Link href="/upload" passHref legacyBehavior>
-                  <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50">Upload</a>
+                  <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50">{t('nav.upload')}</a>
                 </Link>
               )}
               {user && (
                 <>
               <Link href="/invoices" passHref legacyBehavior>
-                <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50">Invoices</a>
+                <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50">{t('nav.invoices')}</a>
               </Link>
               <Link href="/jobs" passHref legacyBehavior>
-                <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50">Jobs</a>
+                <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50">{t('nav.jobs')}</a>
+              </Link>
+              <Link href="/subscription" passHref legacyBehavior>
+                <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50">{t('nav.subscription')}</a>
               </Link>
                 </>
               )}
@@ -89,6 +89,7 @@ export default function MyApp({ Component, pageProps }) {
           </div>
           {/* Desktop profile icon */}
           <div className="hidden md:flex items-center gap-4 relative">
+            <LanguageToggle />
             {user ? (
               <div ref={avatarRef} className="relative">
                 <button
@@ -101,20 +102,20 @@ export default function MyApp({ Component, pageProps }) {
                 {dropdownOpen && (
                   <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-xl shadow-lg z-50 animate-fade-in">
                     <Link href="/profile" passHref legacyBehavior>
-                      <a className="block px-4 py-3 text-gray-700 hover:bg-red-50 rounded-t-xl transition-colors duration-200">Profile</a>
+                      <a className="block px-4 py-3 text-gray-700 hover:bg-red-50 rounded-t-xl transition-colors duration-200">{t('nav.profile')}</a>
                     </Link>
                     <button
                       onClick={handleLogout}
                       className="block w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 rounded-b-xl transition-colors duration-200"
                     >
-                      Logout
+                      {t('nav.logout')}
                     </button>
                   </div>
                 )}
               </div>
             ) : (
               <Link href="/login" passHref legacyBehavior>
-                <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50">Login</a>
+                <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50">{t('nav.login')}</a>
               </Link>
             )}
           </div>
@@ -123,35 +124,41 @@ export default function MyApp({ Component, pageProps }) {
             className={`md:hidden ${navbarOpen ? 'flex flex-col absolute left-0 right-0 top-full bg-white shadow-lg rounded-xl p-4 w-full z-40' : 'hidden'}`}
           >
             <Link href="/" passHref legacyBehavior>
-              <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50" onClick={() => setNavbarOpen(false)}>Home</a>
+              <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50" onClick={() => setNavbarOpen(false)}>{t('nav.home')}</a>
             </Link>
             {user && (
               <Link href="/upload" passHref legacyBehavior>
-                <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50" onClick={() => setNavbarOpen(false)}>Upload</a>
+                <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50" onClick={() => setNavbarOpen(false)}>{t('nav.upload')}</a>
               </Link>
             )}
             {user && (
               <>
             <Link href="/invoices" passHref legacyBehavior>
-              <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50" onClick={() => setNavbarOpen(false)}>Invoices</a>
+              <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50" onClick={() => setNavbarOpen(false)}>{t('nav.invoices')}</a>
             </Link>
             <Link href="/jobs" passHref legacyBehavior>
-              <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50" onClick={() => setNavbarOpen(false)}>Jobs</a>
+              <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50" onClick={() => setNavbarOpen(false)}>{t('nav.jobs')}</a>
+            </Link>
+            <Link href="/subscription" passHref legacyBehavior>
+              <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50" onClick={() => setNavbarOpen(false)}>{t('nav.subscription')}</a>
             </Link>
                 <Link href="/profile" passHref legacyBehavior>
-                  <a className="block px-4 py-3 text-gray-700 hover:bg-red-50 rounded-xl transition-colors duration-200" onClick={() => setNavbarOpen(false)}>Profile</a>
+                  <a className="block px-4 py-3 text-gray-700 hover:bg-red-50 rounded-xl transition-colors duration-200" onClick={() => setNavbarOpen(false)}>{t('nav.profile')}</a>
                 </Link>
                 <button
                   onClick={() => { setNavbarOpen(false); handleLogout(); }}
                   className="block w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors duration-200"
                 >
-                  Logout
+                  {t('nav.logout')}
                 </button>
               </>
             )}
+            <div className="border-t border-gray-100 pt-4 mt-4">
+              <LanguageToggle />
+            </div>
             {!user && (
               <Link href="/login" passHref legacyBehavior>
-                <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50" onClick={() => setNavbarOpen(false)}>Login</a>
+                <a className="text-gray-700 hover:text-red-700 font-medium px-4 py-2 rounded-xl transition-colors duration-200 hover:bg-red-50" onClick={() => setNavbarOpen(false)}>{t('nav.login')}</a>
               </Link>
             )}
           </div>
@@ -168,5 +175,15 @@ export default function MyApp({ Component, pageProps }) {
       </main>
       <Footer />
     </div>
+  );
+}
+
+export default function MyApp({ Component, pageProps }) {
+  return (
+    <LanguageProvider>
+      <AuthProvider>
+        <AppContent Component={Component} pageProps={pageProps} />
+      </AuthProvider>
+    </LanguageProvider>
   );
 }
