@@ -104,14 +104,16 @@
       },
       "enterprise": {
         "title": "エンタープライズ",
-        "price": "お問い合わせ",
+        "price": "$49.99",
+        "period": "/月",
         "features": [
-          "カスタム容量",
-          "チームダッシュボード",
+          "月100,000枚のレシート",
+          "高度なダッシュボード",
           "専任サポート",
-          "APIアクセス"
+          "APIアクセス",
+          "カスタム統合"
         ],
-        "cta": "営業に連絡"
+        "cta": "エンタープライズを始める"
       }
     },
     "faq": {
@@ -549,7 +551,21 @@
       "exporting": "エクスポート中...",
       "saved": "正常に保存されました",
       "deleted": "正常に削除されました",
-      "exported": "正常にエクスポートされました"
+      "exported": "正常にエクスポートされました",
+      "receiptDetails": "レシート詳細",
+      "editReceiptInfo": "レシート情報を編集",
+      "receiptItems": "レシート項目",
+      "itemName": "商品名",
+      "quantity": "数量",
+      "unitPrice": "単価",
+      "total": "合計",
+      "saveChanges": "変更を保存",
+      "filterByUser": "ユーザーでフィルター",
+      "filterByType": "タイプでフィルター",
+      "select": "選択",
+      "selected": "選択済み",
+      "receiptName": "レシート名",
+      "amount": "金額"
     },
     "jobs": {
       "title": "ジョブ",

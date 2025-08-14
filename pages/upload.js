@@ -8,6 +8,7 @@ export default function Upload() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
+  const [credits, setCredits] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -20,8 +21,35 @@ export default function Upload() {
     });
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      fetch('/api/subscriptions/get-credits?t=' + Date.now(), {
+        cache: 'no-cache',
+        headers: {
+          'Cache-Control': 'no-cache'
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log('Upload page credits data:', data);
+          setCredits(data.credits);
+        })
+        .catch((error) => {
+          console.error('Error fetching credits:', error);
+          setCredits(null);
+        });
+    }
+  }, [user]);
+
   const handleUpload = async (e) => {
     e.preventDefault();
+    
+    // Check if user has enough credits
+    if (credits && credits.credits_remaining < files.length) {
+      alert(`You don't have enough credits. You need ${files.length} credits but only have ${credits.credits_remaining} remaining.`);
+      return;
+    }
+    
     setLoading(true);
     setResult(null);
     const formData = new FormData();
@@ -33,8 +61,38 @@ export default function Upload() {
       body: formData,
     });
     const data = await res.json();
+    
+    if (!res.ok) {
+      if (res.status === 402) {
+        alert(`Insufficient credits. You need ${data.required} credits but only have ${data.available} remaining.`);
+      } else {
+        alert(`Upload failed: ${data.error}`);
+      }
+      setLoading(false);
+      return;
+    }
+    
     setResult(data);
     setLoading(false);
+    
+    // Refresh credits after upload
+    if (res.ok) {
+      fetch('/api/subscriptions/get-credits?t=' + Date.now(), {
+        cache: 'no-cache',
+        headers: {
+          'Cache-Control': 'no-cache'
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log('Credits after upload:', data);
+          setCredits(data.credits);
+        })
+        .catch((error) => {
+          console.error('Error refreshing credits:', error);
+          setCredits(null);
+        });
+    }
   };
 
   return (
@@ -51,6 +109,33 @@ export default function Upload() {
                 <div className="flex items-center justify-between mb-6">
                   <div className="text-gray-700 font-semibold">{t('pages.upload.loggedInAs')} {user.email}</div>
                 </div>
+                
+                {/* Credits Display */}
+                <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+                  <h3 className="font-semibold text-gray-700 mb-2">Upload Credits</h3>
+                  {credits ? (
+                    <div className="space-y-1">
+                      <div>
+                        <span className="font-medium text-gray-700">Remaining:</span>
+                        <span className={`ml-2 font-bold ${credits.credits_remaining < files.length ? 'text-red-600' : 'text-blue-600'}`}>
+                          {credits.credits_remaining.toLocaleString()}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="font-medium text-gray-700">Files to upload:</span>
+                        <span className="ml-2 text-gray-900">{files.length}</span>
+                      </div>
+                      {credits.credits_remaining < files.length && (
+                        <div className="text-red-600 text-sm font-medium">
+                          ⚠️ Not enough credits for this upload
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="text-gray-600">Loading credits...</div>
+                  )}
+                </div>
+                
                 <form onSubmit={handleUpload} className="flex flex-col gap-8">
                   <div className="flex flex-col gap-2">
                     <label className="text-gray-700 font-semibold">{t('pages.upload.selectImages')}</label>
@@ -68,7 +153,7 @@ export default function Upload() {
                   </div>
                   <button
                     type="submit"
-                    disabled={!files.length || loading}
+                    disabled={!files.length || loading || (credits && credits.credits_remaining < files.length)}
                     className="bg-gradient-to-r from-red-600 to-pink-500 hover:from-red-700 hover:to-pink-600 text-white font-semibold py-3 rounded-xl shadow transition disabled:opacity-50 text-lg"
                   >
                     {loading ? (

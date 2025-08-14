@@ -104,14 +104,16 @@
       },
       "enterprise": {
         "title": "Enterprise",
-        "price": "Contact",
+        "price": "$49.99",
+        "period": "/mo",
         "features": [
-          "Custom volume",
-          "Team dashboard",
+          "100,000 receipts/month",
+          "Advanced dashboard",
           "Dedicated support",
-          "API access"
+          "API access",
+          "Custom integrations"
         ],
-        "cta": "Contact Sales"
+        "cta": "Start Enterprise"
       }
     },
     "faq": {
@@ -549,7 +551,21 @@
       "exporting": "Exporting...",
       "saved": "Saved successfully",
       "deleted": "Deleted successfully",
-      "exported": "Exported successfully"
+      "exported": "Exported successfully",
+      "receiptDetails": "Receipt Details",
+      "editReceiptInfo": "Edit receipt information",
+      "receiptItems": "Receipt Items",
+      "itemName": "Item Name",
+      "quantity": "Qty",
+      "unitPrice": "Unit Price",
+      "total": "Total",
+      "saveChanges": "Save Changes",
+      "filterByUser": "Filter by user",
+      "filterByType": "Filter by type",
+      "select": "Select",
+      "selected": "selected",
+      "receiptName": "Receipt Name",
+      "amount": "Amount"
     },
     "jobs": {
       "title": "Jobs",

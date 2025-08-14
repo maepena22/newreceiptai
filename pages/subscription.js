@@ -79,10 +79,10 @@ export default function SubscriptionPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">{t('pages.subscription.loading')}</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">{t('pages.subscription.loading')}</p>
         </div>
       </div>
     );
@@ -90,7 +90,7 @@ export default function SubscriptionPage() {
 
   if (!stripeConfigured) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 py-12 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 py-12 px-4">
         <div className="max-w-2xl mx-auto text-center">
           <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-8">
             <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -115,184 +115,257 @@ export default function SubscriptionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-blue-50 py-12 px-4">
       <div className="max-w-7xl mx-auto">
+        {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold text-red-700 mb-4">
+          <h1 className="text-5xl font-extrabold text-gray-800 mb-4">
             {t('pages.subscription.title')}
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             {t('pages.subscription.subtitle')}
           </p>
         </div>
 
+        {/* Alert Messages */}
         {error && (
-          <div className="max-w-md mx-auto mb-8 bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-red-600 font-medium">{error}</p>
+          <div className="max-w-2xl mx-auto mb-8 bg-red-50 border border-red-200 rounded-xl p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-800">{error}</p>
+              </div>
+            </div>
           </div>
         )}
 
         {subscription && (
-          <div className="max-w-md mx-auto mb-8 bg-green-50 border border-green-200 rounded-lg p-4">
-            <p className="text-green-600 font-medium">
-              You currently have an active {subscription.plan_type} subscription.
-            </p>
+          <div className="max-w-2xl mx-auto mb-8 bg-green-50 border border-green-200 rounded-xl p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-green-800">
+                  You currently have an active <span className="font-semibold capitalize">{subscription.plan_type}</span> subscription.
+                </p>
+              </div>
+            </div>
           </div>
         )}
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        {/* Pricing Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {/* Free Plan */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-gray-200 hover:border-red-300 transition-all duration-300 hover:shadow-2xl">
-            <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-300">
+            <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-8 py-6">
+              <h3 className="text-2xl font-bold text-white text-center">
                 {t('home.pricing.free.title')}
               </h3>
-              <div className="text-4xl font-extrabold text-red-600 mb-2">
-                {t('home.pricing.free.price')}
+              <div className="text-center mt-2">
+                <span className="text-4xl font-extrabold text-white">
+                  {t('home.pricing.free.price')}
+                </span>
               </div>
             </div>
-
-            <ul className="space-y-3 mb-8">
-              {tArray('home.pricing.free.features').map((feature, index) => (
-                <li key={index} className="flex items-center">
-                  <svg
-                    className="w-5 h-5 text-green-500 mr-3 flex-shrink-0"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-gray-700">{feature}</span>
-                </li>
-              ))}
-            </ul>
-
-            <Link
-              href="/register"
-              className="w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 bg-red-600 text-white hover:bg-red-700 transform hover:scale-105 block text-center"
-            >
-              {t('home.pricing.free.cta')}
-            </Link>
+            
+            <div className="p-8">
+              <ul className="space-y-4 mb-8">
+                {tArray('home.pricing.free.features').map((feature, index) => (
+                  <li key={index} className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-green-500 mr-3 flex-shrink-0 mt-0.5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span className="text-gray-700">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              
+              {/* No button for Free plan - it's always default */}
+              <div className="text-center text-gray-500 text-sm">
+                Always available
+              </div>
+            </div>
           </div>
 
           {/* Pro Plan */}
-          <div className={`bg-white rounded-2xl shadow-xl p-8 border-2 transition-all duration-300 hover:shadow-2xl ${
+          <div className={`bg-white rounded-2xl shadow-xl border overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:scale-105 ${
             subscription?.plan_type === 'pro'
               ? 'border-green-500 bg-green-50'
-              : 'border-gray-200 hover:border-red-300'
+              : 'border-gray-100'
           }`}>
-            <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+            <div className="bg-gradient-to-r from-red-600 to-pink-500 px-8 py-6 relative">
+              {subscription?.plan_type === 'pro' && (
+                <div className="absolute top-4 right-4">
+                  <span className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                    CURRENT
+                  </span>
+                </div>
+              )}
+              <h3 className="text-2xl font-bold text-white text-center">
                 {t('home.pricing.pro.title')}
               </h3>
-              <div className="text-4xl font-extrabold text-red-600 mb-2">
-                {t('home.pricing.pro.price')}<span className="text-base font-normal">{t('home.pricing.pro.period')}</span>
+              <div className="text-center mt-2">
+                <span className="text-4xl font-extrabold text-white">
+                  {t('home.pricing.pro.price')}
+                </span>
+                <span className="text-white text-lg ml-2">{t('home.pricing.pro.period')}</span>
               </div>
             </div>
-
-            <ul className="space-y-3 mb-8">
-              {tArray('home.pricing.pro.features').map((feature, index) => (
-                <li key={index} className="flex items-center">
-                  <svg
-                    className="w-5 h-5 text-green-500 mr-3 flex-shrink-0"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-gray-700">{feature}</span>
-                </li>
-              ))}
-            </ul>
-
-            <button
-              onClick={() => handleSubscribe('pro')}
-              disabled={processing || subscription?.plan_type === 'pro'}
-              className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 ${
-                subscription?.plan_type === 'pro'
-                  ? 'bg-green-500 text-white cursor-not-allowed'
+            
+            <div className="p-8">
+              <ul className="space-y-4 mb-8">
+                {tArray('home.pricing.pro.features').map((feature, index) => (
+                  <li key={index} className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-green-500 mr-3 flex-shrink-0 mt-0.5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span className="text-gray-700">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              
+              <button
+                onClick={() => handleSubscribe('pro')}
+                disabled={processing || subscription?.plan_type === 'pro'}
+                className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 ${
+                  subscription?.plan_type === 'pro'
+                    ? 'bg-green-500 text-white cursor-not-allowed'
+                    : processing
+                    ? 'bg-gray-400 text-white cursor-not-allowed'
+                    : 'bg-gradient-to-r from-red-600 to-pink-500 text-white hover:from-red-700 hover:to-pink-600 transform hover:scale-105'
+                }`}
+              >
+                {subscription?.plan_type === 'pro'
+                  ? t('pages.subscription.currentPlan')
                   : processing
-                  ? 'bg-gray-400 text-white cursor-not-allowed'
-                  : 'bg-red-600 text-white hover:bg-red-700 transform hover:scale-105'
-              }`}
-            >
-              {subscription?.plan_type === 'pro'
-                ? t('pages.subscription.currentPlan')
-                : processing
-                ? t('pages.subscription.processing')
-                : t('pages.subscription.subscribeNow')}
-            </button>
+                  ? t('pages.subscription.processing')
+                  : t('pages.subscription.subscribeNow')}
+              </button>
+            </div>
           </div>
 
           {/* Enterprise Plan */}
-          <div className={`bg-white rounded-2xl shadow-xl p-8 border-2 transition-all duration-300 hover:shadow-2xl ${
+          <div className={`bg-white rounded-2xl shadow-xl border overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:scale-105 ${
             subscription?.plan_type === 'enterprise'
               ? 'border-green-500 bg-green-50'
-              : 'border-gray-200 hover:border-red-300'
+              : 'border-gray-100'
           }`}>
-            <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+            <div className="bg-gradient-to-r from-purple-600 to-purple-700 px-8 py-6 relative">
+              {subscription?.plan_type === 'enterprise' && (
+                <div className="absolute top-4 right-4">
+                  <span className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                    CURRENT
+                  </span>
+                </div>
+              )}
+              <h3 className="text-2xl font-bold text-white text-center">
                 {t('home.pricing.enterprise.title')}
               </h3>
-              <div className="text-4xl font-extrabold text-red-600 mb-2">
-                {t('home.pricing.enterprise.price')}
+              <div className="text-center mt-2">
+                <span className="text-4xl font-extrabold text-white">
+                  {t('home.pricing.enterprise.price')}
+                </span>
+                <span className="text-white text-lg ml-2">{t('home.pricing.enterprise.period')}</span>
               </div>
             </div>
-
-            <ul className="space-y-3 mb-8">
-              {tArray('home.pricing.enterprise.features').map((feature, index) => (
-                <li key={index} className="flex items-center">
-                  <svg
-                    className="w-5 h-5 text-green-500 mr-3 flex-shrink-0"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-gray-700">{feature}</span>
-                </li>
-              ))}
-            </ul>
-
-            <button
-              onClick={() => handleSubscribe('enterprise')}
-              disabled={processing || subscription?.plan_type === 'enterprise'}
-              className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 ${
-                subscription?.plan_type === 'enterprise'
-                  ? 'bg-green-500 text-white cursor-not-allowed'
+            
+            <div className="p-8">
+              <ul className="space-y-4 mb-8">
+                {tArray('home.pricing.enterprise.features').map((feature, index) => (
+                  <li key={index} className="flex items-start">
+                    <svg
+                      className="w-5 h-5 text-green-500 mr-3 flex-shrink-0 mt-0.5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span className="text-gray-700">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              
+              <button
+                onClick={() => handleSubscribe('enterprise')}
+                disabled={processing || subscription?.plan_type === 'enterprise'}
+                className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 ${
+                  subscription?.plan_type === 'enterprise'
+                    ? 'bg-green-500 text-white cursor-not-allowed'
+                    : processing
+                    ? 'bg-gray-400 text-white cursor-not-allowed'
+                    : 'bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:from-purple-700 hover:to-purple-800 transform hover:scale-105'
+                }`}
+              >
+                {subscription?.plan_type === 'enterprise'
+                  ? t('pages.subscription.currentPlan')
                   : processing
-                  ? 'bg-gray-400 text-white cursor-not-allowed'
-                  : 'bg-red-600 text-white hover:bg-red-700 transform hover:scale-105'
-              }`}
-            >
-              {subscription?.plan_type === 'enterprise'
-                ? t('pages.subscription.currentPlan')
-                : processing
-                ? t('pages.subscription.processing')
-                : t('pages.subscription.subscribeNow')}
-            </button>
+                  ? t('pages.subscription.processing')
+                  : t('pages.subscription.subscribeNow')}
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="text-center mt-12">
-          <p className="text-gray-600 mb-4">
-            {t('pages.subscription.moneyBackGuarantee')}
-          </p>
-          <p className="text-sm text-gray-500">
-            {t('pages.subscription.cancelAnytime')}
-          </p>
+        {/* Footer Info */}
+        <div className="text-center mt-16">
+          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {t('pages.subscription.moneyBackGuarantee')}
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  30-day money-back guarantee on all paid plans
+                </p>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {t('pages.subscription.cancelAnytime')}
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  Cancel your subscription at any time, no questions asked
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

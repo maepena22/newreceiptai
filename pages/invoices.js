@@ -16,8 +16,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import * as XLSX from 'xlsx';
+import { useTranslation } from '../lib/useTranslation';
 
 export default function InvoicesPage() {
+  const { t } = useTranslation();
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState('');
@@ -85,10 +87,54 @@ export default function InvoicesPage() {
     if (expanded) {
       const inv = filteredInvoices.find(inv => inv.id === expanded);
       if (inv) {
+        // Format date for HTML date input (YYYY-MM-DD)
+        let formattedDate = '';
+        if (inv.date && inv.date.trim() !== '') {
+          try {
+            // Handle Japanese date format (e.g., "2024年1月24日")
+            let dateStr = inv.date;
+            if (dateStr.includes('年') && dateStr.includes('月') && dateStr.includes('日')) {
+              // Extract year, month, day from Japanese format
+              const yearMatch = dateStr.match(/(\d{4})年/);
+              const monthMatch = dateStr.match(/(\d{1,2})月/);
+              const dayMatch = dateStr.match(/(\d{1,2})日/);
+              
+              if (yearMatch && monthMatch && dayMatch) {
+                const year = yearMatch[1];
+                const month = monthMatch[1].padStart(2, '0');
+                const day = dayMatch[1].padStart(2, '0');
+                dateStr = `${year}-${month}-${day}`;
+                console.log('Japanese date converted:', inv.date, '->', dateStr);
+              }
+            } else if (dateStr.includes('/')) {
+              // Handle other common formats like MM/DD/YYYY or DD/MM/YYYY
+              const parts = dateStr.split('/');
+              if (parts.length === 3) {
+                // Assume MM/DD/YYYY format
+                const month = parts[0].padStart(2, '0');
+                const day = parts[1].padStart(2, '0');
+                const year = parts[2];
+                dateStr = `${year}-${month}-${day}`;
+                console.log('Slash date converted:', inv.date, '->', dateStr);
+              }
+            }
+            
+            const dateObj = new Date(dateStr);
+            if (!isNaN(dateObj.getTime())) {
+              formattedDate = dateObj.toISOString().split('T')[0];
+              console.log('Date formatted successfully:', inv.date, '->', formattedDate);
+            } else {
+              console.log('Invalid date after parsing:', dateStr);
+            }
+          } catch (e) {
+            console.log('Date parsing error:', e, 'for date:', inv.date);
+          }
+        }
+        
         setEditState({
           company_name: inv.company_name || '',
           receipt_type: inv.receipt_type || '',
-          date: inv.date || '',
+          date: formattedDate,
           image_name: inv.image_name || '',
           price: inv.price || '',
         });
@@ -144,7 +190,7 @@ export default function InvoicesPage() {
     // Generate Excel file
     XLSX.writeFile(workbook, `invoices_export_${new Date().toISOString().split('T')[0]}.xlsx`);
     
-    toaster.push(<Message type="success">Exported {selectedInvoices.length} invoices to Excel</Message>);
+            toaster.push(<Message type="success">{t('pages.invoices.exported')}</Message>);
   };
 
   const handleSave = async () => {
@@ -190,7 +236,7 @@ export default function InvoicesPage() {
             <h2 className="font-extrabold text-3xl text-red-700 m-0">Receipts Gallery</h2>
             {selectMode && (
               <div className="flex items-center gap-2 bg-red-50 px-3 py-1 rounded-full">
-                <span className="text-red-700 font-medium">{selectedInvoices.length} selected</span>
+                <span className="text-red-700 font-medium">{selectedInvoices.length} {t('pages.invoices.selected')}</span>
                 <button 
                   onClick={() => setSelectMode(false)}
                   className="text-red-500 hover:text-red-700"
@@ -219,7 +265,7 @@ export default function InvoicesPage() {
                   appearance="ghost" 
                   onClick={() => setSelectMode(false)}
                 >
-                  Cancel
+                  {t('pages.invoices.cancel')}
                 </Button>
               </>
             ) : (
@@ -233,11 +279,11 @@ export default function InvoicesPage() {
                     <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
                     <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  Select
+                  {t('pages.invoices.select')}
                 </Button>
                 <SelectPicker
                   data={uniqueUsers}
-                  placeholder="Filter by user"
+                  placeholder={t('pages.invoices.filterByUser')}
                   value={selectedUser}
                   onChange={setSelectedUser}
                   style={{ width: '100%', maxWidth: 180 }}
@@ -246,7 +292,7 @@ export default function InvoicesPage() {
                 />
                 <SelectPicker
                   data={uniqueTypes}
-                  placeholder="Filter by type"
+                  placeholder={t('pages.invoices.filterByType')}
                   value={selectedType}
                   onChange={setSelectedType}
                   style={{ width: '100%', maxWidth: 180 }}
@@ -255,7 +301,7 @@ export default function InvoicesPage() {
                 />
                 <InputGroup className="w-full">
                   <Input 
-                    placeholder="Search receipts..."
+                    placeholder={t('pages.invoices.search')}
                     value={searchText}
                     onChange={setSearchText}
                     style={{ width: '100%', maxWidth: 180 }}
@@ -267,9 +313,9 @@ export default function InvoicesPage() {
           </div>
         </div>
         {loading ? (
-          <div className="text-lg text-gray-500">Loading...</div>
+          <div className="text-lg text-gray-500">{t('pages.invoices.loading')}</div>
         ) : filteredInvoices.length === 0 ? (
-          <Message type="info" style={{ marginTop: 24 }}>No invoices found.</Message>
+          <Message type="info" style={{ marginTop: 24 }}>{t('pages.invoices.noInvoices')}</Message>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-8 w-full px-4">
             {filteredInvoices.map(inv => (
@@ -417,65 +463,65 @@ export default function InvoicesPage() {
                   </IconButton>
                   <DialogTitle sx={{ p: 0, mb: 2 }}>
                     <Typography variant="h5" fontWeight={700} color="primary.main" gutterBottom>
-                      Receipt Details
+                      {t('pages.invoices.receiptDetails')}
                     </Typography>
                     <Typography variant="subtitle2" color="text.secondary">
-                      Edit receipt information
+                      {t('pages.invoices.editReceiptInfo')}
                     </Typography>
                   </DialogTitle>
                   <DialogContent sx={{ p: 0 }}>
                     <Grid container spacing={3} sx={{ mb: 2, mt: 2 }}>
                       <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Company Name"
-                          value={editState.company_name}
-                          onChange={e => handleEditChange('company_name', e.target.value)}
-                          variant="outlined"
-                          size="medium"
-                          sx={{ width: { xs: '100%', sm: 260 }, mb: { xs: 2, sm: 0 } }}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Receipt Type"
-                          value={editState.receipt_type}
-                          onChange={e => handleEditChange('receipt_type', e.target.value)}
-                          variant="outlined"
-                          size="medium"
-                          sx={{ width: { xs: '100%', sm: 260 }, mb: { xs: 2, sm: 0 } }}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Date"
-                          type="date"
-                          value={editState.date || ''}
-                          onChange={e => handleEditChange('date', e.target.value)}
-                          variant="outlined"
-                          size="medium"
-                          InputLabelProps={{ shrink: true }}
-                          sx={{ width: { xs: '100%', sm: 260 }, mb: { xs: 2, sm: 0 } }}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Amount"
-                          value={editState.price}
-                          onChange={e => handleEditChange('price', e.target.value)}
-                          variant="outlined"
-                          size="medium"
-                          sx={{ width: { xs: '100%', sm: 260 }, mb: { xs: 2, sm: 0 } }}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          label="Receipt Name"
-                          value={editState.image_name}
-                          onChange={e => handleEditChange('image_name', e.target.value)}
-                          variant="outlined"
-                          size="medium"
-                          sx={{ width: { xs: '100%', sm: 400 }, mb: { xs: 2, sm: 0 } }}
-                        />
+                                                  <TextField
+                            label={t('pages.invoices.companyName')}
+                            value={editState.company_name}
+                            onChange={e => handleEditChange('company_name', e.target.value)}
+                            variant="outlined"
+                            size="medium"
+                            sx={{ width: { xs: '100%', sm: 260 }, mb: { xs: 2, sm: 0 } }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            label={t('pages.invoices.receiptType')}
+                            value={editState.receipt_type}
+                            onChange={e => handleEditChange('receipt_type', e.target.value)}
+                            variant="outlined"
+                            size="medium"
+                            sx={{ width: { xs: '100%', sm: 260 }, mb: { xs: 2, sm: 0 } }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            label={t('pages.invoices.date')}
+                            type="date"
+                            value={editState.date || ''}
+                            onChange={e => handleEditChange('date', e.target.value)}
+                            variant="outlined"
+                            size="medium"
+                            InputLabelProps={{ shrink: true }}
+                            sx={{ width: { xs: '100%', sm: 260 }, mb: { xs: 2, sm: 0 } }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            label={t('pages.invoices.amount')}
+                            value={editState.price}
+                            onChange={e => handleEditChange('price', e.target.value)}
+                            variant="outlined"
+                            size="medium"
+                            sx={{ width: { xs: '100%', sm: 260 }, mb: { xs: 2, sm: 0 } }}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                            label={t('pages.invoices.receiptName')}
+                            value={editState.image_name}
+                            onChange={e => handleEditChange('image_name', e.target.value)}
+                            variant="outlined"
+                            size="medium"
+                            sx={{ width: { xs: '100%', sm: 400 }, mb: { xs: 2, sm: 0 } }}
+                          />
                       </Grid>
                     </Grid>
                     {(() => {
@@ -489,15 +535,15 @@ export default function InvoicesPage() {
                         <Card elevation={1} sx={{ mb: 3, borderRadius: 3, bgcolor: '#f8fafc' }}>
                           <CardContent sx={{ p: 2 }}>
                             <Typography variant="subtitle1" fontWeight={600} gutterBottom>
-                              Receipt Items
+                              {t('pages.invoices.receiptItems')}
                             </Typography>
                             <table style={{ width: '100%', fontSize: 14 }}>
                               <thead>
                                 <tr style={{ background: '#f1f5f9' }}>
-                                  <th style={{ textAlign: 'left', padding: 8 }}>Item Name</th>
-                                  <th style={{ textAlign: 'center', padding: 8 }}>Qty</th>
-                                  <th style={{ textAlign: 'right', padding: 8 }}>Unit Price</th>
-                                  <th style={{ textAlign: 'right', padding: 8 }}>Total</th>
+                                  <th style={{ textAlign: 'left', padding: 8 }}>{t('pages.invoices.itemName')}</th>
+                                  <th style={{ textAlign: 'center', padding: 8 }}>{t('pages.invoices.quantity')}</th>
+                                  <th style={{ textAlign: 'right', padding: 8 }}>{t('pages.invoices.unitPrice')}</th>
+                                  <th style={{ textAlign: 'right', padding: 8 }}>{t('pages.invoices.total')}</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -526,7 +572,7 @@ export default function InvoicesPage() {
                           disabled={saving}
                           sx={{ borderRadius: 2, fontWeight: 600 }}
                         >
-                          {saving ? 'Saving...' : 'Save Changes'}
+                          {saving ? t('pages.invoices.saving') : t('pages.invoices.saveChanges')}
                         </MuiButton>
                       </Grid>
                       <Grid item xs={6}>
@@ -538,7 +584,7 @@ export default function InvoicesPage() {
                           onClick={() => setExpanded(null)}
                           sx={{ borderRadius: 2, fontWeight: 600 }}
                         >
-                          Cancel
+                          {t('pages.invoices.cancel')}
                         </MuiButton>
                       </Grid>
                     </Grid>

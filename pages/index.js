@@ -196,7 +196,7 @@ export default function Home() {
       <section className="w-full max-w-5xl mx-auto py-16 px-4 animate-fade-in-up">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-12">{t('home.pricing.title')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white rounded-2xl shadow p-8 flex flex-col items-center text-center border-2 border-red-200">
+          <div className="bg-white rounded-2xl shadow p-8 flex flex-col items-center text-center border-2 border-gray-200">
             <h3 className="text-xl font-bold mb-2 text-red-700">{t('home.pricing.free.title')}</h3>
             <p className="text-3xl font-extrabold mb-4">{t('home.pricing.free.price')}</p>
             <ul className="text-gray-600 mb-6 space-y-2">
@@ -204,11 +204,7 @@ export default function Home() {
                 <li key={index}>{feature}</li>
               ))}
             </ul>
-           
-            <Link href="/register" passHref legacyBehavior>
-              <a className="bg-gradient-to-r from-red-600 to-pink-500 text-white font-bold py-2 px-6 rounded-xl shadow hover:from-red-700 hover:to-pink-600 transition-all duration-200">{t('home.pricing.free.cta')}</a>
-            </Link>
-          
+            {/* Removed Get Started button - Free plan is always default */}
           </div>
           <div className="bg-white rounded-2xl shadow p-8 flex flex-col items-center text-center border-4 border-red-500 scale-105">
             <h3 className="text-xl font-bold mb-2 text-red-700">{t('home.pricing.pro.title')}</h3>
@@ -218,19 +214,21 @@ export default function Home() {
                 <li key={index}>{feature}</li>
               ))}
             </ul>
-            <Link href="/register" passHref legacyBehavior>
+            <Link href={user ? "/subscription" : "/login"} passHref legacyBehavior>
               <a className="bg-gradient-to-r from-red-600 to-pink-500 text-white font-bold py-2 px-6 rounded-xl shadow hover:from-red-700 hover:to-pink-600 transition-all duration-200">{t('home.pricing.pro.cta')}</a>
             </Link>
           </div>
           <div className="bg-white rounded-2xl shadow p-8 flex flex-col items-center text-center border-2 border-red-200">
             <h3 className="text-xl font-bold mb-2 text-red-700">{t('home.pricing.enterprise.title')}</h3>
-            <p className="text-3xl font-extrabold mb-4">{t('home.pricing.enterprise.price')}</p>
+            <p className="text-3xl font-extrabold mb-4">{t('home.pricing.enterprise.price')}<span className="text-base font-normal">{t('home.pricing.enterprise.period')}</span></p>
             <ul className="text-gray-600 mb-6 space-y-2">
               {tArray('home.pricing.enterprise.features').map((feature, index) => (
                 <li key={index}>{feature}</li>
               ))}
             </ul>
-            <a href="mailto:sales@yourdomain.com" className="bg-gradient-to-r from-red-600 to-pink-500 text-white font-bold py-2 px-6 rounded-xl shadow hover:from-red-700 hover:to-pink-600 transition-all duration-200">{t('home.pricing.enterprise.cta')}</a>
+            <Link href={user ? "/subscription" : "/login"} passHref legacyBehavior>
+              <a className="bg-gradient-to-r from-red-600 to-pink-500 text-white font-bold py-2 px-6 rounded-xl shadow hover:from-red-700 hover:to-pink-600 transition-all duration-200">{t('home.pricing.enterprise.cta')}</a>
+            </Link>
           </div>
         </div>
       </section>

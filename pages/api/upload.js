@@ -50,11 +50,14 @@ export default async function handler(req, res) {
   }
 
   const form = formidable();
-  form.parse(req, async (err, fields, files) => {
-    if (err) {
-      console.error('[Upload API] Formidable parsing error:', err);
-      return res.status(500).json({ error: 'Upload failed: ' + err.message });
-    }
+  
+  try {
+    const [fields, files] = await new Promise((resolve, reject) => {
+      form.parse(req, (err, fields, files) => {
+        if (err) reject(err);
+        else resolve([fields, files]);
+      });
+    });
 
     const uploader_name = user.email;
     let uploadedFiles = files.file;
@@ -63,6 +66,25 @@ export default async function handler(req, res) {
     }
     if (!Array.isArray(uploadedFiles)) {
       uploadedFiles = [uploadedFiles];
+    }
+
+    // Check and deduct credits before processing
+    const fileCount = uploadedFiles.length;
+    const userCredits = db.getUserCredits(user.id);
+    
+    if (!userCredits || userCredits.credits_remaining < fileCount) {
+      return res.status(402).json({ 
+        error: 'Insufficient credits', 
+        required: fileCount,
+        available: userCredits ? userCredits.credits_remaining : 0
+      });
+    }
+
+    // Deduct credits
+    try {
+      db.useUserCredits(user.id, fileCount);
+    } catch (creditError) {
+      return res.status(500).json({ error: 'Failed to deduct credits' });
     }
 
     let batchId;
@@ -116,11 +138,15 @@ export default async function handler(req, res) {
       });
     }
 
-    res.json({
+    return res.json({
       message: 'Upload successful. Processing will continue asynchronously.',
       batchId,
       jobIds,
       errors,
     });
-  });
+    
+  } catch (error) {
+    console.error('[Upload API] Error:', error);
+    return res.status(500).json({ error: 'Upload failed: ' + error.message });
+  }
 }

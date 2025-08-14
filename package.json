@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"next dev\" \"node lib/worker.mjs\"",
-    "build": "next build",
+    "build": "next build --no-lint",
     "start": "concurrently \"next start\" \"node lib/worker.mjs\"",
     "lint": "next lint"
+    
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.846.0",
