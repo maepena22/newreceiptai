@@ -45,5 +45,8 @@ export default async function handler(req, res) {
     db.updateUserProfile(userId, { name, mobile, address });
   }
 
+  // Add 10 free credits to new users
+  db.addUserCredits(userId, 10);
+
   res.status(201).json({ success: true });
 }

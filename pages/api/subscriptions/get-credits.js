@@ -38,7 +38,22 @@ export default async function handler(req, res) {
     console.log('Credits API - Credits found:', !!credits);
     console.log('Credits API - Credits data:', credits);
 
-    res.status(200).json({ credits });
+    // If user has no credits, create them with 10 free credits
+    if (!credits) {
+      console.log('Credits API - Creating free credits for new user');
+      db.addUserCredits(decoded.userId, 10);
+      
+      // Get the newly created credits
+      const newCredits = db.prepare(`
+        SELECT credits_remaining, credits_total, last_reset_date, created_at, updated_at
+        FROM user_credits 
+        WHERE user_id = ?
+      `).get(decoded.userId);
+      
+      res.status(200).json({ credits: newCredits });
+    } else {
+      res.status(200).json({ credits });
+    }
   } catch (error) {
     console.error('Credits API - Error:', error);
     res.status(500).json({ error: 'Internal server error' });
