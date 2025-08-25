@@ -64,7 +64,7 @@ export default function Home() {
                 icon: '📂',
                 title: t('home.features.bulkUpload.title'),
                 description: t('home.features.bulkUpload.description'),
-                video: '/videos/upload-demo.mp4',
+                video: '/upload.mp4',
                 features: tArray('home.features.bulkUpload.features')
               },
               {
@@ -72,7 +72,7 @@ export default function Home() {
                 icon: '📊',
                 title: t('home.features.dashboard.title'),
                 description: t('home.features.dashboard.description'),
-                video: '/videos/dashboard-demo.mp4',
+                video: '/edit.mp4',
                 features: tArray('home.features.dashboard.features')
               },
               {
